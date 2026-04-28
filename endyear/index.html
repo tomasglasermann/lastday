@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0057B8" />
+<title>Maccabi Tzair Miami — End of Year Journey</title>
+<style>
+  /* ---------- Reset & base ---------- */
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;-webkit-text-size-adjust:100%}
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color:#0A1F44;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #BFE0FF 0%, transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, #FFD8A8 0%, transparent 55%),
+      linear-gradient(180deg, #EAF4FF 0%, #FFF8EC 100%);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  h1,h2,h3{margin:0;letter-spacing:-0.01em}
+  h1{font-size:1.6rem;line-height:1.15}
+  h2{font-size:1.25rem;line-height:1.2}
+  h3{font-size:1.05rem}
+  p{line-height:1.5;margin:0 0 .75em}
+
+  /* ---------- Layout ---------- */
+  .app{
+    max-width:520px;
+    margin:0 auto;
+    padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
+    position:relative;
+  }
+  .screen{display:none;animation:fade .35s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- Header / brand ---------- */
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 4px 14px;
+  }
+  .brand-mark{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,#0057B8,#003F87);
+    display:grid;place-items:center;color:#fff;font-weight:800;
+    box-shadow:0 6px 16px rgba(0,87,184,.25);
+  }
+  .brand-name{font-weight:700;font-size:.95rem;letter-spacing:.02em}
+  .brand-sub{font-size:.7rem;color:#5b6b86;text-transform:uppercase;letter-spacing:.12em}
+
+  /* ---------- Cards / surfaces ---------- */
+  .card{
+    background:#FFF8EC;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 8px 28px rgba(10,31,68,.10);
+    border:1px solid rgba(10,31,68,.06);
+  }
+  .muted{color:#5b6b86;font-size:.9rem}
+
+  /* ---------- BOARDING PASS ---------- */
+  .pass{
+    position:relative;
+    border-radius:22px;
+    background:
+      linear-gradient(180deg,#FFFFFF 0%, #FFF8EC 100%);
+    box-shadow:0 18px 40px rgba(10,31,68,.18);
+    overflow:hidden;
+    border:1px solid rgba(10,31,68,.06);
+  }
+  .pass-top{
+    background:linear-gradient(135deg,#0057B8,#1976D2);
+    color:#fff;padding:18px 18px 16px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .pass-top .label{font-size:.65rem;letter-spacing:.18em;opacity:.85;text-transform:uppercase}
+  .pass-top .flight{font-size:1.35rem;font-weight:800;margin-top:2px}
+  .pass-top .plane{font-size:1.6rem;transform:rotate(-15deg)}
+  .pass-route{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:10px;
+    padding:18px;align-items:center;
+  }
+  .pass-route .city{font-weight:800;font-size:1.4rem;color:#0A1F44;line-height:1}
+  .pass-route .city small{display:block;font-weight:500;color:#5b6b86;font-size:.7rem;letter-spacing:.1em;margin-top:4px;text-transform:uppercase}
+  .pass-route .dots{
+    display:flex;align-items:center;justify-content:center;gap:4px;color:#0057B8;
+    font-size:.9rem;
+  }
+  .pass-route .dots::before,.pass-route .dots::after{
+    content:"";display:inline-block;width:24px;height:1px;border-top:1px dashed #0057B8;
+  }
+  .pass-meta{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+    padding:0 18px 18px;
+  }
+  .pass-meta .item .label{font-size:.6rem;letter-spacing:.15em;color:#5b6b86;text-transform:uppercase}
+  .pass-meta .item .value{font-weight:700;margin-top:2px}
+  .pass-stub{
+    border-top:2px dashed rgba(10,31,68,.18);
+    padding:16px 18px;
+    background:#FFF3D9;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .pass-stub .barcode{
+    flex:1;height:36px;
+    background:repeating-linear-gradient(90deg,#0A1F44 0 2px,transparent 2px 4px,#0A1F44 4px 5px,transparent 5px 9px,#0A1F44 9px 11px,transparent 11px 13px);
+    border-radius:4px;opacity:.85;
+  }
+  .pass-stub .seq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:.85rem}
+
+  .pass::before,.pass::after{
+    content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+    background:#EAF4FF;top:calc(100% - 70px);
+  }
+  .pass::before{left:-12px}
+  .pass::after{right:-12px}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 18px;border-radius:14px;font-weight:700;
+    transition:transform .12s ease, box-shadow .12s ease, background .2s ease;
+    width:100%;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:#0057B8;color:#fff;box-shadow:0 8px 20px rgba(0,87,184,.35)}
+  .btn-primary:hover{background:#004fa3}
+  .btn-ghost{background:transparent;color:#0057B8;border:1.5px solid #0057B8}
+  .btn-warn{background:#FF8C42;color:#fff;box-shadow:0 8px 20px rgba(255,140,66,.35)}
+  .btn-warn:hover{background:#f57f33}
+  .btn-row{display:flex;gap:10px;margin-top:14px}
+  .btn-row .btn{flex:1}
+
+  .input{
+    width:100%;padding:14px 14px;border-radius:12px;border:1.5px solid #C9D7EE;
+    background:#fff;font-size:1rem;color:#0A1F44;
+  }
+  .input:focus{outline:none;border-color:#0057B8;box-shadow:0 0 0 4px rgba(0,87,184,.15)}
+  label.field{display:block;margin:14px 0 6px;font-weight:600;font-size:.85rem;color:#0A1F44}
+
+  /* ---------- Boarding screen ---------- */
+  .hero{
+    text-align:center;padding:14px 6px 22px;
+  }
+  .hero .kicker{
+    display:inline-block;background:#0057B8;color:#fff;font-size:.7rem;letter-spacing:.18em;
+    text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:12px;
+  }
+  .hero h1{font-size:1.9rem}
+  .hero p{margin-top:8px;color:#3b4a66}
+
+  .pulse-dot{
+    width:10px;height:10px;border-radius:50%;background:#1FBF75;display:inline-block;
+    box-shadow:0 0 0 0 rgba(31,191,117,.7);animation:pulse 1.6s infinite;
+    margin-right:8px;vertical-align:middle;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(31,191,117,.6)}
+    70%{box-shadow:0 0 0 10px rgba(31,191,117,0)}
+    100%{box-shadow:0 0 0 0 rgba(31,191,117,0)}
+  }
+
+  /* ---------- Map / Flight Path ---------- */
+  .progress-wrap{
+    position:sticky;top:0;z-index:5;
+    margin: -16px -16px 14px;
+    padding:14px 16px 12px;
+    background:linear-gradient(180deg, rgba(234,244,255,.95), rgba(234,244,255,.85));
+    backdrop-filter:saturate(140%) blur(8px);
+    -webkit-backdrop-filter:saturate(140%) blur(8px);
+    border-bottom:1px solid rgba(10,31,68,.08);
+  }
+  .progress-row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:8px;
+  }
+  .progress-row .title{font-weight:800;font-size:.95rem}
+  .progress-row .count{font-size:.8rem;color:#3b4a66;font-weight:700}
+  .progress-track{
+    position:relative;height:14px;background:#fff;border-radius:999px;
+    border:1px solid rgba(10,31,68,.1);overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;background:linear-gradient(90deg,#1FBF75,#0AA15B);
+    border-radius:999px;transition:width .5s ease;
+    width:0%;
+  }
+  .progress-plane{
+    position:absolute;top:50%;transform:translate(-50%,-50%);
+    font-size:1.1rem;transition:left .5s ease;left:0%;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));
+  }
+
+  .map-intro{margin:6px 2px 14px}
+  .map-intro h2{margin-bottom:4px}
+  .map-intro p{color:#3b4a66;font-size:.92rem}
+
+  .stations{
+    position:relative;
+    padding-left:34px;
+  }
+  .stations::before{
+    content:"";position:absolute;left:14px;top:8px;bottom:8px;
+    border-left:3px dashed #0057B8;opacity:.45;
+  }
+  .station{
+    position:relative;background:#fff;border-radius:16px;padding:14px 14px 14px 16px;
+    margin-bottom:12px;border:1px solid rgba(10,31,68,.07);
+    box-shadow:0 4px 14px rgba(10,31,68,.06);
+    display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+    transition:transform .12s ease, box-shadow .15s ease;
+    cursor:pointer;
+  }
+  .station:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(10,31,68,.10)}
+  .station::before{
+    content:attr(data-num);
+    position:absolute;left:-34px;top:50%;transform:translateY(-50%);
+    width:30px;height:30px;border-radius:50%;
+    background:#fff;border:2.5px solid #0057B8;color:#0057B8;
+    display:grid;place-items:center;font-weight:800;font-size:.85rem;
+    box-shadow:0 4px 8px rgba(0,87,184,.18);
+  }
+  .station.done::before{
+    background:#1FBF75;border-color:#0AA15B;color:#fff;content:"✓";
+  }
+  .station .meta{min-width:0}
+  .station .name{font-weight:700;font-size:1rem;line-height:1.25}
+  .station .loc{font-size:.78rem;color:#5b6b86;margin-top:4px;display:flex;align-items:center;gap:5px}
+  .station .badge{
+    padding:3px 8px;border-radius:999px;font-size:.65rem;font-weight:800;
+    letter-spacing:.06em;text-transform:uppercase;display:inline-block;margin-top:6px;
+  }
+  .badge.physical{background:#FFE2D1;color:#B0481A}
+  .badge.creative{background:#E5DAFF;color:#5731A8}
+  .badge.family{background:#D5F1E2;color:#1F7A4F}
+  .badge.interactive{background:#FFF1B8;color:#8A6A00}
+  .station .go{
+    background:#0057B8;color:#fff;width:36px;height:36px;border-radius:12px;
+    display:grid;place-items:center;font-size:1rem;flex-shrink:0;
+  }
+  .station.done .go{background:#1FBF75}
+
+  /* ---------- Modal (station detail) ---------- */
+  .modal{
+    position:fixed;inset:0;background:rgba(10,31,68,.55);
+    display:none;align-items:flex-end;justify-content:center;
+    z-index:50;padding:0;
+  }
+  .modal.open{display:flex;animation:fade .25s ease}
+  .modal-card{
+    background:#FFF8EC;width:100%;max-width:520px;
+    border-radius:22px 22px 0 0;
+    max-height:92vh;overflow-y:auto;
+    animation:slideUp .3s ease;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  @keyframes slideUp{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .modal-header{
+    position:sticky;top:0;background:linear-gradient(135deg,#0057B8,#1976D2);
+    color:#fff;padding:18px 18px 16px;border-radius:22px 22px 0 0;
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+  }
+  .modal-header .num{
+    background:rgba(255,255,255,.2);padding:4px 10px;border-radius:999px;
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  }
+  .modal-header h2{font-size:1.3rem;margin-top:6px;line-height:1.2}
+  .modal-header .close{
+    width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);
+    display:grid;place-items:center;color:#fff;font-size:1.1rem;font-weight:700;
+    flex-shrink:0;
+  }
+  .modal-body{padding:16px 18px 22px}
+  .info-row{
+    display:flex;align-items:center;gap:8px;font-size:.88rem;color:#3b4a66;
+    margin:6px 0;
+  }
+  .info-row .ico{width:22px;text-align:center}
+  .section{
+    background:#fff;border-radius:14px;padding:14px;margin-top:12px;
+    border:1px solid rgba(10,31,68,.06);
+  }
+  .section h3{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#0057B8;margin-bottom:8px}
+  .section p, .section li{font-size:.95rem;color:#0A1F44}
+  .section ul{margin:0;padding-left:20px}
+  .madrich-note{
+    margin-top:12px;background:#E8F1FF;border-left:4px solid #0057B8;
+    padding:12px 14px;border-radius:10px;font-size:.88rem;color:#0A1F44;
+  }
+  .madrich-note strong{color:#0057B8}
+
+  /* ---------- Stamp animation ---------- */
+  .stamp-overlay{
+    position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(10,31,68,.6);z-index:100;
+  }
+  .stamp-overlay.show{display:flex;animation:fade .25s ease}
+  .stamp{
+    width:220px;height:220px;border-radius:50%;
+    border:6px solid #C8102E;color:#C8102E;
+    display:grid;place-items:center;text-align:center;
+    background:rgba(255,248,236,.95);
+    transform:rotate(-12deg) scale(.3);
+    animation:stampIn .6s cubic-bezier(.2,.9,.3,1.4) forwards;
+    font-weight:900;letter-spacing:.05em;
+    box-shadow:0 20px 40px rgba(0,0,0,.3);
+  }
+  .stamp .big{font-size:1.4rem;line-height:1;margin-bottom:6px}
+  .stamp .mid{font-size:.85rem;line-height:1.1;padding:0 18px}
+  .stamp .small{font-size:.65rem;margin-top:8px;opacity:.8;letter-spacing:.18em}
+  @keyframes stampIn{
+    0%{transform:rotate(20deg) scale(2);opacity:0}
+    60%{transform:rotate(-15deg) scale(.9);opacity:1}
+    100%{transform:rotate(-12deg) scale(1);opacity:1}
+  }
+
+  /* ---------- Passport screen ---------- */
+  .passport-cover{
+    background:linear-gradient(135deg,#0A1F44,#0057B8);
+    color:#F5C518;padding:22px;border-radius:18px;text-align:center;
+    box-shadow:0 14px 30px rgba(10,31,68,.25);margin-bottom:14px;
+  }
+  .passport-cover .seal{
+    width:60px;height:60px;border-radius:50%;border:2px solid #F5C518;
+    display:grid;place-items:center;margin:6px auto 10px;font-size:1.4rem;
+  }
+  .passport-cover h2{font-family:Georgia,serif;letter-spacing:.05em}
+  .passport-cover .name{font-size:.85rem;margin-top:8px;color:#fff;opacity:.9}
+
+  .stamps-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  }
+  .stamp-slot{
+    aspect-ratio:1/1;border-radius:50%;
+    border:2px dashed rgba(10,31,68,.25);
+    display:grid;place-items:center;color:rgba(10,31,68,.35);
+    font-weight:800;font-size:.85rem;background:rgba(255,255,255,.4);
+  }
+  .stamp-slot.filled{
+    border:2px solid #C8102E;color:#C8102E;background:rgba(200,16,46,.08);
+    transform:rotate(-6deg);
+    font-size:.7rem;text-align:center;line-height:1;padding:4px;
+  }
+  .stamp-slot.filled:nth-child(odd){transform:rotate(5deg)}
+
+  /* ---------- Completion screen ---------- */
+  .celebrate{
+    text-align:center;padding:30px 16px 10px;
+  }
+  .celebrate .badge-big{
+    width:120px;height:120px;border-radius:50%;
+    background:linear-gradient(135deg,#F5C518,#FFB300);
+    display:grid;place-items:center;margin:0 auto 18px;
+    font-size:3rem;box-shadow:0 14px 30px rgba(245,197,24,.45);
+  }
+  .celebrate h1{font-size:2rem}
+  .celebrate p{color:#3b4a66;margin-top:8px}
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:90;display:none}
+  .confetti.show{display:block}
+  .confetti span{
+    position:absolute;top:-20px;width:8px;height:14px;
+    animation:fall linear forwards;border-radius:2px;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(720deg);opacity:.2}
+  }
+
+  /* ---------- Bottom Nav ---------- */
+  .tabbar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:rgba(255,255,255,.96);
+    border-top:1px solid rgba(10,31,68,.1);
+    backdrop-filter:saturate(140%) blur(10px);
+    -webkit-backdrop-filter:saturate(140%) blur(10px);
+    display:none;justify-content:space-around;
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:30;
+  }
+  .tabbar.show{display:flex}
+  .tab{
+    flex:1;text-align:center;padding:8px 4px;border-radius:10px;
+    color:#5b6b86;font-size:.7rem;font-weight:700;letter-spacing:.04em;
+  }
+  .tab .ico{font-size:1.2rem;display:block;margin-bottom:2px}
+  .tab.active{color:#0057B8}
+
+  /* ---------- Utility ---------- */
+  .center{text-align:center}
+  .mt-2{margin-top:8px}
+  .mt-4{margin-top:16px}
+  .mt-6{margin-top:24px}
+  .divider{height:1px;background:rgba(10,31,68,.08);margin:18px 0}
+  .chip{
+    display:inline-block;font-size:.7rem;padding:4px 10px;border-radius:999px;
+    background:#E8F1FF;color:#0057B8;font-weight:700;letter-spacing:.04em;
+  }
+
+  /* ---------- Children list (boarding) ---------- */
+  .children-list{margin-top:6px}
+  .child-row{
+    display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;
+    margin-top:10px;
+  }
+  .child-row label{font-weight:600;font-size:.88rem;color:#0A1F44}
+  .child-row select{
+    width:100%;padding:12px 12px;border-radius:12px;border:1.5px solid #C9D7EE;
+    background:#fff;font-size:1rem;color:#0A1F44;-webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%230057B8' d='M6 8L0 0h12z'/></svg>");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;
+  }
+  .child-row select:focus{outline:none;border-color:#0057B8;box-shadow:0 0 0 4px rgba(0,87,184,.15)}
+
+  /* ---------- Code gate (station modal) ---------- */
+  .code-gate{
+    background:linear-gradient(135deg,#FFF3D9,#FFE7B0);
+    border:1.5px dashed #C9961A;border-radius:14px;
+    padding:16px;margin-top:12px;text-align:center;
+  }
+  .code-gate .lock{font-size:1.6rem;margin-bottom:4px}
+  .code-gate h3{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#8A6A00;margin-bottom:6px}
+  .code-gate p{font-size:.88rem;color:#5b4a10;margin:4px 0 12px}
+  .code-input{
+    width:100%;text-align:center;letter-spacing:.18em;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:1.3rem;font-weight:800;text-transform:uppercase;
+    padding:14px;border-radius:12px;border:2px solid #C9961A;
+    background:#fff;color:#0A1F44;
+  }
+  .code-input::placeholder{opacity:.35;letter-spacing:.18em}
+
+  /* ---------- Trivia (web challenges) ---------- */
+  .trivia{
+    background:#fff;border-radius:14px;padding:16px;margin-top:12px;
+    border:1px solid rgba(10,31,68,.06);
+  }
+  .trivia .progress-mini{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#0057B8;
+    font-weight:800;margin-bottom:10px;
+  }
+  .trivia .progress-mini .dots{display:flex;gap:5px}
+  .trivia .progress-mini .dot{
+    width:8px;height:8px;border-radius:50%;background:#E0E8F5;
+  }
+  .trivia .progress-mini .dot.done{background:#1FBF75}
+  .trivia .progress-mini .dot.current{background:#0057B8;box-shadow:0 0 0 3px rgba(0,87,184,.2)}
+  .trivia .q{
+    font-size:1.05rem;font-weight:700;line-height:1.35;
+    margin:6px 0 14px;color:#0A1F44;
+  }
+  .trivia-options{display:flex;flex-direction:column;gap:8px}
+  .trivia-opt{
+    width:100%;text-align:left;padding:14px 16px;
+    background:#fff;border:1.5px solid #C9D7EE;border-radius:12px;
+    font-size:.95rem;font-weight:600;color:#0A1F44;
+    transition:transform .12s ease, border-color .15s, background .15s;
+    display:flex;align-items:center;gap:10px;
+  }
+  .trivia-opt:hover:not(:disabled){border-color:#0057B8;background:#EAF4FF}
+  .trivia-opt:active:not(:disabled){transform:translateY(1px)}
+  .trivia-opt:disabled{cursor:default;opacity:.55}
+  .trivia-opt.correct{
+    background:#D5F1E2;border-color:#1FBF75;color:#0A4F2E;opacity:1;
+  }
+  .trivia-opt.wrong{
+    background:#FCDCE2;border-color:#C8102E;color:#6B0A1F;opacity:1;
+  }
+  .trivia-opt .ico{
+    width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+    font-size:.8rem;font-weight:800;background:#EAF4FF;color:#0057B8;flex-shrink:0;
+  }
+  .trivia-opt.correct .ico{background:#1FBF75;color:#fff}
+  .trivia-opt.wrong .ico{background:#C8102E;color:#fff}
+  .trivia-feedback{
+    margin:12px 0 4px;padding:12px 14px;border-radius:10px;font-size:.9rem;
+    line-height:1.4;display:none;
+  }
+  .trivia-feedback.show{display:block;animation:fade .25s ease}
+  .trivia-feedback.fb-correct{
+    background:#E8F8EF;color:#0A4F2E;border-left:3px solid #1FBF75;
+  }
+  .trivia-feedback.fb-wrong{
+    background:#FFF1E8;color:#6B3814;border-left:3px solid #FF8C42;
+  }
+  .trivia-score{
+    text-align:center;padding:18px 12px 6px;
+  }
+  .trivia-score .num{
+    font-size:2.4rem;font-weight:900;line-height:1;
+    background:linear-gradient(135deg,#0057B8,#1976D2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .trivia-score.fail .num{
+    background:linear-gradient(135deg,#FF8C42,#F57F33);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .trivia-score .label{
+    font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+    color:#5b6b86;margin-top:6px;font-weight:800;
+  }
+  .trivia-score .msg{margin-top:10px;color:#3b4a66;font-size:.95rem}
+  .code-input:focus{outline:none;border-color:#0057B8;box-shadow:0 0 0 4px rgba(0,87,184,.15)}
+  .code-error{
+    margin-top:8px;color:#C8102E;font-size:.85rem;font-weight:700;
+    display:none;
+  }
+  .code-error.show{display:block;animation:shake .35s ease}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%,60%{transform:translateX(-6px)}
+    40%,80%{transform:translateX(6px)}
+  }
+
+  @media(min-width:600px){
+    h1{font-size:1.9rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ====================== BOARDING (Welcome) ====================== -->
+  <section id="screen-boarding" class="screen active">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">Maccabi Tzair Miami</div>
+        <div class="brand-sub">End of Year · 5786</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <span class="kicker">✈ Now Boarding</span>
+      <h1>A Year of Memories,<br/>One Big Journey.</h1>
+      <p>Welcome, family! Today you'll travel through <strong>20 destinations</strong> across the JCC — one for every chapter of our year together. Complete each challenge to earn a passport stamp.</p>
+    </div>
+
+    <div class="pass" role="region" aria-label="Boarding pass">
+      <div class="pass-top">
+        <div>
+          <div class="label">Boarding Pass</div>
+          <div class="flight">MTM · 5786</div>
+        </div>
+        <div class="plane">✈</div>
+      </div>
+      <div class="pass-route">
+        <div class="city">SEP<small>Departure</small></div>
+        <div class="dots">✈</div>
+        <div class="city" style="text-align:right">MAY<small>Arrival</small></div>
+      </div>
+      <div class="pass-meta">
+        <div class="item"><div class="label">Gate</div><div class="value">JCC</div></div>
+        <div class="item"><div class="label">Stops</div><div class="value">20</div></div>
+        <div class="item"><div class="label">Class</div><div class="value">Family</div></div>
+      </div>
+      <div class="pass-stub">
+        <div class="barcode" aria-hidden="true"></div>
+        <div class="seq" id="boarding-seq">MTM-0000</div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <h3>Check in your family</h3>
+      <p class="muted" style="margin-top:4px">We'll print your name on your passport.</p>
+      <label class="field" for="familyName">Family name</label>
+      <input class="input" id="familyName" placeholder="e.g. The Goyhman Family" autocomplete="off"/>
+      <label class="field" for="numChildren">How many children are traveling?</label>
+      <input class="input" id="numChildren" type="number" min="1" max="10" value="1"/>
+      <div id="childrenList" class="children-list"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startBtn">Begin Boarding ✈</button>
+      </div>
+      <p class="muted center mt-2" style="font-size:.78rem"><span class="pulse-dot"></span>20 madrichim are at their gates, ready to greet you.</p>
+    </div>
+
+    <div class="card mt-4">
+      <h3>How the journey works</h3>
+      <ul style="padding-left:20px;margin:8px 0 0">
+        <li>Tap any destination on your map to see where to go.</li>
+        <li>Walk to the location in the JCC shown on the card.</li>
+        <li>Find the <strong>Hebrew word</strong> on the wall and type it in to unlock your challenge.</li>
+        <li>Two madrichim at each station will help and hand out materials.</li>
+        <li>Complete the challenge → tap <em>Stamp my passport</em> → watch it fill up.</li>
+        <li>Stamp all 20 to reach your final destination 🎉</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ====================== MAP / FLIGHT PATH ====================== -->
+  <section id="screen-map" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-row">
+        <div class="title">Your flight path</div>
+        <div class="count"><span id="progressCount">0</span>/20 stamps</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-plane" id="progressPlane">✈</div>
+      </div>
+    </div>
+
+    <div class="map-intro">
+      <h2>Choose your next destination</h2>
+      <p>Stations are loosely ordered like our year — but you can travel in any order. Each one takes about 5–8 minutes.</p>
+    </div>
+
+    <div class="stations" id="stationList"><!-- populated by JS --></div>
+  </section>
+
+  <!-- ====================== PASSPORT ====================== -->
+  <section id="screen-passport" class="screen">
+    <div class="passport-cover">
+      <div class="seal">✡</div>
+      <div class="brand-sub" style="color:#F5C518">Maccabi Tzair Miami</div>
+      <h2>PASSPORT</h2>
+      <div class="name" id="passportName">— Family —</div>
+    </div>
+
+    <div class="card">
+      <div class="progress-row" style="margin-bottom:12px">
+        <div class="title">My Stamps</div>
+        <div class="count"><span id="stampsCount">0</span> of 20</div>
+      </div>
+      <div class="stamps-grid" id="stampsGrid"><!-- populated by JS --></div>
+    </div>
+
+    <div class="card mt-4">
+      <h3>Travel notes</h3>
+      <p class="muted" style="margin-top:4px">Every stamp is a memory from our year. Take a moment between gates — show your stamps to a madrich, share a story, take a family photo.</p>
+      <button class="btn btn-ghost mt-2" id="resetBtn">Reset journey</button>
+    </div>
+  </section>
+
+  <!-- ====================== COMPLETION ====================== -->
+  <section id="screen-completion" class="screen">
+    <div class="celebrate">
+      <div class="badge-big">🏆</div>
+      <h1>You've arrived!</h1>
+      <p>Mazal tov, <strong id="finalName">Family</strong> — you traveled the whole year in one afternoon.</p>
+      <p>Bring your passport to the <strong>Final Gate</strong> in the main lobby for your end-of-year keepsake.</p>
+      <div class="btn-row" style="margin-top:22px">
+        <button class="btn btn-primary" data-go="passport">View my passport</button>
+      </div>
+      <button class="btn btn-ghost mt-4" data-go="map">Back to the map</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ====================== TAB BAR ====================== -->
+<nav class="tabbar" id="tabbar" aria-label="Primary">
+  <button class="tab" data-go="map"><span class="ico">🗺</span>Map</button>
+  <button class="tab" data-go="passport"><span class="ico">📘</span>Passport</button>
+  <button class="tab" data-go="boarding"><span class="ico">🎫</span>Pass</button>
+</nav>
+
+<!-- ====================== MODAL ====================== -->
+<div class="modal" id="stationModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <div class="num" id="modalNum">Station 01</div>
+        <h2 id="modalTitle">—</h2>
+      </div>
+      <button class="close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"><!-- populated --></div>
+  </div>
+</div>
+
+<div class="stamp-overlay" id="stampOverlay">
+  <div class="stamp">
+    <div class="big" id="stampBig">VISITED</div>
+    <div class="mid" id="stampMid">Station Name</div>
+    <div class="small">MACCABI TZAIR · MIAMI</div>
+  </div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+
+<script>
+/* ============================================================
+   STATIONS — built from the actual MTM 5786 calendar themes
+   ============================================================ */
+const STATIONS = [
+  {
+    id:1, name:"Rosh Hashana — The Wishing Tree", code:"SHANA",
+    eje:"Judaism", month:"September",
+    location:"Main Lobby — by the Wishing Tree",
+    type:"creative",
+    explanation:"We started the year with apples and honey, dipping into sweetness and asking for a sweeter year ahead. Tonight your family adds your wish for what you hope our Maccabi family becomes next year.",
+    challenge:"The Wishing Tree. As a family, talk together and decide on ONE wish you have for Maccabi Tzair Miami in the next year — for your kvutza, for the movement, for the community, for a kid you know. Write it together on a paper apple and decorate it. Hang your apple on the Wishing Tree. By the end of the night, the tree will be heavy with hopes from every Maccabi family.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:2, name:"Katan Sleepover — First Time Brave", code:"OMETZ",
+    eje:"Community", month:"October",
+    location:"Quiet Corner — Brave Wall",
+    type:"family",
+    explanation:"On the Katan Sleepover, our youngest chanichim spent their first night at the JCC without their parents — for many of them, it was the bravest thing they had ever done. Tonight every family celebrates a 'first time brave' moment of their own.",
+    challenge:"First Time Brave. Each family member writes or draws on a small paper badge ONE time in their life they were brave (lost a tooth, slept over without parents, gave a speech, learned to ride a bike, started a new school…). Pin everyone's badges together onto your Family Brave Banner. The madrich pins your banner to one parent's shirt — wear it proudly for the rest of the journey, and add your family name to the Brave Wall.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:3, name:"Sukkot — Family Sukkah Build", code:"SUKKAH",
+    eje:"Judaism", month:"October",
+    location:"Outdoor Courtyard (by the garden)",
+    type:"physical",
+    explanation:"In Sukkot we build a little home open to the sky and to guests. The walls are temporary — what holds them up is community, working with whatever is in front of you, together.",
+    challenge:"Family Sukkah Build. Using the materials at your station, work as a family to build a mini sukkah in under 2 minutes. It must stand on its own when you're done — no one holding it up. The madrichim will time you. Take a family photo inside your sukkah at the end.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:4, name:"Simchat Torah — Family Hora", code:"SIMCHA",
+    eje:"Judaism", month:"October",
+    location:"Multipurpose Room — Stage A",
+    type:"physical",
+    explanation:"On Simchat Torah we danced with the Torah and celebrated reaching the end of one year of reading and starting another. The dance never really stops — it just changes partners.",
+    challenge:"Family Hora Circle. The madrichim will play 60 seconds of Israeli music — your family must form a circle, hold hands, and keep the circle moving until the song ends. Bonus stamp shape if you invite another family in to grow the circle!",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:5, name:"What is Maccabi Tzair? — Roots & Values", code:"CHAZAK",
+    eje:"Community", month:"October",
+    location:"Library / Reading Corner",
+    type:"interactive",
+    explanation:"Maccabi Tzair was founded almost a century ago, and today reaches every continent. How well does your family really know our movement? Time to find out.",
+    trivia:[
+      {q:"When was Maccabi Tzair founded?", options:["1899","1929","1948","1967"], correct:1,
+       explain:"Founded in 1929 in Czechoslovakia, born out of the Maccabi sports movement and Zionist youth ideals."},
+      {q:"What are the official Maccabi Tzair colors?", options:["Red & white","Blue & white","Green & gold","Black & yellow"], correct:1,
+       explain:"Blue and white — the same as the Israeli flag, because our roots are deeply Zionist."},
+      {q:"What does the Maccabi greeting 'Hazak Ve'ematz!' mean?", options:["Peace be with you","Always remember","Be strong and courageous","Never give up"], correct:2,
+       explain:"\"Be strong and courageous\" — the words said to Joshua before he led the Jewish people into the Land of Israel."},
+      {q:"What do we call a small group within Maccabi Tzair?", options:["Mishpacha","Kvutza","Chevra","Aliyah"], correct:1,
+       explain:"A 'kvutza' — Hebrew for 'group'. Your kvutza is your closest Maccabi family."},
+      {q:"In which country does Maccabi Tzair have its largest community today?", options:["USA","Israel","Argentina","Brazil"], correct:2,
+       explain:"Argentina — the Latin American Maccabi Tzair community is one of the strongest in the world."}
+    ],
+    challenge:"Family Trivia: 5 questions about Maccabi Tzair. Discuss together as a family, tap your answer on the screen. Get 4 out of 5 to earn the stamp — you can retry, and the madrichim will whisper hints if you ask.",
+    materials:"None — just your phone"
+  },
+  {
+    id:6, name:"Building Our Kvutza — Family Shield", code:"KVUTZA",
+    eje:"Community", month:"September",
+    location:"Classroom Aleph — Family Shields wall",
+    type:"creative",
+    explanation:"At the start of the year each kvutza chose its name, its color, its values. Tonight your family becomes its own kvutza — and designs its own shield.",
+    challenge:"Your Family Shield. As a family, pick: (1) a kvutza name (a real word, an invented word, an inside joke — something that fits your family), (2) a color that represents you, (3) one value that describes your family (kindness, ruach, adventure, perseverance, humor…). Draw your shield on the canvas square — name across the top, value across the bottom, your color filling the middle. Hang it on the Family Shields wall.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:7, name:"Israeli Culture — A Taste of Israel", code:"BAMBA",
+    eje:"Zionism", month:"November",
+    location:"Kitchen / Dining Hall — tasting bar",
+    type:"interactive",
+    explanation:"Israel is a country you can taste — bambas in your pocket, halva on your tongue, krembo in winter. Tonight your family takes a blindfolded flavor tour and tries to identify what you're tasting and hearing.",
+    challenge:"Blindfolded Taste & Sound Test. Each family member tries one Israeli food blindfolded and the madrich plays a 10-second clip of an Israeli song. As a family, get 3 right between you (foods + song) to earn the stamp.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:8, name:"The Kvutza — The Family Cheer", code:"YACHAD",
+    eje:"Community", month:"November",
+    location:"Multipurpose Room",
+    type:"family",
+    explanation:"Every kvutza has a cheer — a 5-second burst of name, sound, and movement that tells the whole world who they are. Tonight your family invents one of your own.",
+    challenge:"The Family Cheer. Together, invent a 5-second cheer for your family that includes: (1) your family name, (2) one sound everyone makes together, (3) one hand or body movement, (4) a jump at the end. Practice it twice. Perform it for the madrich. Use it any time you all meet up at another station for the rest of the night!",
+    materials:"None — just your voices"
+  },
+  {
+    id:9, name:"Mini Maccabi Games — Family Relay", code:"RUACH",
+    eje:"Community", month:"November",
+    location:"Outdoor Field",
+    type:"physical",
+    explanation:"At the Mini Maccabi Games every kvutza ran together, cheered together, and came home with sore legs and great stories. Tonight your family runs its own relay.",
+    challenge:"Family Relay. Four cones at this station, four challenges: (1) jump rope x10, (2) basketball shot, (3) hop on one foot to the next cone, (4) balloon bop (keep a balloon up using only your head). Each family member does ONE of the four. Finish all four under 2 minutes for the stamp. The madrich times you and cheers loudly.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:10, name:"Shabbat — The Shabbat Puzzle", code:"SHABBAT",
+    eje:"Judaism", month:"December",
+    location:"Beit Knesset Annex — Shabbat table",
+    type:"family",
+    explanation:"Shabbat is built piece by piece — take any one away and it doesn't quite work. Tonight your family puts the picture back together.",
+    challenge:"The Shabbat Puzzle. At your table is a Shabbat-themed puzzle. Work together as a family to assemble it. The madrich times you. Once complete, take a family photo with the finished puzzle. Bonus: name out loud every Shabbat object you can spot in the picture.",
+    materials:"Puzzle provided at the table"
+  },
+  {
+    id:11, name:"Havdala — What Do You Know?", code:"HAVDALA",
+    eje:"Judaism", month:"December",
+    location:"Hallway near auditorium — Havdala station",
+    type:"interactive",
+    explanation:"Havdala is a tiny ceremony but it's full of meaning — fire, spices, wine, song. Tonight, find out how much your family really knows about it.",
+    trivia:[
+      {q:"What does the word 'Havdala' mean?", options:["Welcome","Separation","Together","Goodbye"], correct:1,
+       explain:"Havdala means 'separation' or 'distinction' — it marks the line between Shabbat and the rest of the week."},
+      {q:"When does Havdala happen?", options:["Friday at sunset","Saturday morning","Saturday night, when 3 stars appear","Sunday morning"], correct:2,
+       explain:"Saturday night, when 3 stars appear in the sky — the official end of Shabbat."},
+      {q:"What 3 things do we use in Havdala?", options:["A book, a candle, water","A candle, spices, wine","Bread, wine, a flower","Light, sound, a song"], correct:1,
+       explain:"A braided candle, a spice box (besamim), and a cup of wine or grape juice. Each one engages a different sense."},
+      {q:"Why do we smell the spices (besamim) during Havdala?", options:["To stay awake","To celebrate the new week","To comfort the soul as Shabbat leaves","Just tradition with no reason"], correct:2,
+       explain:"To comfort the soul as the special peace of Shabbat leaves us — the smell carries us into the week."},
+      {q:"Who do we sing about in the traditional Havdala song?", options:["Moshe","Eliyahu Hanavi (Elijah)","King David","Yehoshua"], correct:1,
+       explain:"Eliyahu Hanavi — Elijah the Prophet — who, the tradition says, will return to announce the era of peace."}
+    ],
+    challenge:"Family Trivia: 5 questions about Havdala. Discuss as a family, tap your answer on the screen. Get 4 out of 5 right to earn the stamp.",
+    materials:"None — just your phone"
+  },
+  {
+    id:12, name:"Summer Plans — Where We're Headed", code:"KAYITZ",
+    eje:"Community", month:"May",
+    location:"Lobby Lounge — Summer Departures wall",
+    type:"creative",
+    explanation:"The end of the year always points us toward the next adventure. Camp, beach, family trips, learning something new, doing nothing at all — every kind of summer is a story waiting to start.",
+    challenge:"Pack Your Summer Suitcase. Each family member writes or draws ONE thing they're bringing to their summer on the paper suitcase — a place ('Camp Maccabi'), a feeling ('patience'), a goal ('learn to surf'), a person they'll see. Decorate it as a family. Hang it on the 'Summer Departures' wall — by the end of the night the wall will be full of suitcases ready for take-off.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:13, name:"Tzahal — Trust Obstacle", code:"TZAHAL",
+    eje:"Zionism", month:"January",
+    location:"Gym — far end (training zone)",
+    type:"physical",
+    explanation:"In the IDF, everyone depends on the person next to them — sometimes literally with their eyes closed. We learned this year that strength is built on trust, not on force.",
+    challenge:"Trust Obstacle. One family member is blindfolded. The rest of the family must guide them through a small cone course using ONLY voice — no touching, no pointing. Switch roles once so a different family member gets to be the 'soldier'. Both runs must finish without knocking over a cone for the stamp.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:14, name:"Chanichim Day — Pose & Snap", code:"KEN",
+    eje:"Community", month:"February",
+    location:"Game Room — Pose Stage",
+    type:"family",
+    explanation:"On Chanichim Day the kids ran the show — they picked the songs, made the rules, designed the games. Tonight the kids in your family decide the silliest pose.",
+    challenge:"Pose & Snap. The madrich shows your family a Pose Card — a funny image, a famous painting, a yoga shape, an animal, a Hebrew letter. Your family has 60 seconds to recreate the image as a group pose using your bodies — every family member must be in the photo. The madrich takes the photo with their phone and adds it to the closing slideshow. Bonus stamp shape if you can pose to form a Hebrew letter together.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:15, name:"Mitzvah Day — The Family Pledge", code:"MITZVAH",
+    eje:"Judaism", month:"February",
+    location:"Multipurpose Room B — Pledge table",
+    type:"family",
+    explanation:"On Mitzvah Day we packed bags, wrote letters, and cleaned the park. We learned that the smallest action, repeated, becomes a habit — and a habit is a family's true character.",
+    challenge:"The Family Pledge. Together, decide on ONE specific mitzvah your family will commit to doing in the next 30 days — something concrete (\"call Bubbe every Sunday\", \"donate the toys we don't play with\", \"say one nice thing at dinner\"). Write it on the pledge card. Sign it as a family. Take it home and put it on your fridge as a reminder.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:16, name:"My Journey in Maccabi — Memory in Motion", code:"MASA",
+    eje:"Community", month:"May",
+    location:"Auditorium hallway — Memory Stage",
+    type:"family",
+    explanation:"At the end of every chanich's path with us comes the 6th grade trip — the rite of passage that closes one chapter. But the memories are made all year, in moments your kids will remember long after the songs fade.",
+    challenge:"Memory in Motion. Ask the kids in your family: what was your favorite Maccabi memory from this year? (a peulah, a song, a moment at machane, a friend, a snack, a game…) As a family, recreate that memory in a single photo — everyone in the frame, posing or acting it out. The madrich photographs you and adds it to the closing slideshow.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:17, name:"Israeli Innovation — Made in Israel", code:"CHIDUSH",
+    eje:"Zionism", month:"February",
+    location:"STEM / Maker Room — Made in Israel wall",
+    type:"interactive",
+    explanation:"Israel is called 'Start-Up Nation' for a reason — its inventors have changed the way the whole world eats, drinks, drives, and talks. How many of those Israeli inventions does your family know about?",
+    trivia:[
+      {q:"Which of these was invented in Israel?", options:["Cherry tomatoes","The fork","Bubble wrap","Velcro"], correct:0,
+       explain:"Cherry tomatoes were developed by Israeli scientists in the 1970s to grow faster and ripen later in supermarkets around the world."},
+      {q:"Which navigation app was invented in Israel?", options:["Google Maps","Waze","Apple Maps","Citymapper"], correct:1,
+       explain:"Waze was invented in Israel in 2008 and later sold to Google for over $1 billion."},
+      {q:"What life-changing water technology was invented in Israel?", options:["Bottled water","Drip irrigation","Water filters","Ice cubes"], correct:1,
+       explain:"Drip irrigation was invented at Kibbutz Hatzerim in 1959 — and it now feeds farmland around the world."},
+      {q:"Which everyday medical device — a tiny camera you can swallow — was invented in Israel?", options:["The smartphone","The selfie stick","The PillCam","The hearing aid"], correct:2,
+       explain:"The PillCam — a tiny swallowable camera that lets doctors see inside the body without surgery."},
+      {q:"Which messaging app was invented by 4 young Israelis in 1996?", options:["WhatsApp","Telegram","Viber","ICQ"], correct:3,
+       explain:"ICQ — the very first popular instant messenger. The 'Uh oh!' notification sound is iconic."}
+    ],
+    challenge:"Made in Israel: 5 quick trivia questions about Israeli inventions. Discuss as a family, tap the answer on the screen. Get 4 out of 5 right to earn the stamp. Bonus: take a photo with the 'Made in Israel' wall — it goes into the closing slideshow.",
+    materials:"None — just your phone"
+  },
+  {
+    id:18, name:"Machane — Build the Bonfire", code:"MACHANE",
+    eje:"Community", month:"March",
+    location:"Outdoor Field — south corner (camp banner)",
+    type:"creative",
+    explanation:"Every machane night ended at the bonfire — songs, stories, marshmallows, faces lit up by flame. Tonight your family builds its own.",
+    challenge:"Build the Bonfire. With the materials waiting at your station, work as a family to build a bonfire that stands on its own. Once it's 'lit', sit around it for 30 seconds of silence as a family. Photo with your bonfire.",
+    materials:"Everything provided at the station"
+  },
+  {
+    id:19, name:"Pesach — Find the Afikoman", code:"CHERUT",
+    eje:"Judaism", month:"April",
+    location:"Dining Hall — long table",
+    type:"interactive",
+    explanation:"Pesach asks every generation to tell the story again — and to ask why. The four questions are really just one: what does freedom mean to you?",
+    trivia:[
+      {q:"What does Pesach (Passover) celebrate?", options:["Receiving the Torah at Sinai","The Exodus from Egypt","The dedication of the Temple","The story of Queen Esther"], correct:1,
+       explain:"Pesach celebrates the Exodus — when the Jewish people went from slavery in Egypt to freedom."},
+      {q:"How many cups of wine do we drink at the Seder?", options:["1","2","3","4"], correct:3,
+       explain:"4 cups — each one represents a different promise of freedom God made to the Jewish people."},
+      {q:"What is the special bread we eat during Pesach?", options:["Pita","Challah","Matzah","Bagels"], correct:2,
+       explain:"Matzah — the 'bread of affliction'. It's flat because the Jewish people had no time to let their bread rise as they fled Egypt."},
+      {q:"What is the AFIKOMAN?", options:["A song at the end of the Seder","A piece of matzah hidden during the Seder","The bitter herb","The Pesach plate"], correct:1,
+       explain:"A piece of matzah hidden during the Seder for the children to find. The Seder cannot end until it is found!"}
+    ],
+    challenge:"Two parts: (1) Several paper afikomans are hidden around the dining hall — find any ONE as a family and bring it to the madrich. (2) On the screen, answer 4 trivia questions about Pesach as a family. Get 3 out of 4 right (and bring the afikoman) to earn the stamp.",
+    materials:"Hidden afikomans + your phone"
+  },
+  {
+    id:20, name:"Yom Haatzmaut — Israel's Birthday", code:"ATZMAUT",
+    eje:"Zionism", month:"April",
+    location:"Outdoor Field — Blue & White zone",
+    type:"physical",
+    explanation:"Every spring we paint our cheeks blue and white and celebrate the day Israel was born. The whole movement comes together — flags flying, music loud, falafel everywhere, hands in the air.",
+    challenge:"Family Flag Moment. (1) One family member runs to the basket and grabs an Israeli flag for your family. (2) Together create a creative family pose with the flag — high, low, jumping, lifting one person, anything goes. (3) Each family member signs the giant 'Happy Birthday Israel!' banner with one wish for Israel for the year ahead. The madrich photographs your flag pose for the closing slideshow. End with a family shout: 'YOM HAATZMAUT SAMEACH!'",
+    materials:"Everything provided at the station"
+  }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const STORAGE_KEY = "mtm_endyear_v7";
+const GRADES = ["K","1st","2nd","3rd","4th","5th"];
+const state = {
+  family: "",
+  children: [{grade:"K"}],     // [{grade:"K"|"1st"|...}, ...]
+  seq: "MTM-" + Math.floor(1000 + Math.random()*9000),
+  stamps: {},                   // id -> true (challenge completed)
+  unlocked: {}                  // id -> true (code entered, challenge revealed)
+};
+
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    Object.assign(state, JSON.parse(raw));
+  }catch(e){}
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const screens = ["boarding","map","passport","completion"];
+function go(name){
+  screens.forEach(s=>{
+    document.getElementById("screen-"+s).classList.toggle("active", s===name);
+  });
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.go===name);
+  });
+  // Show tabbar after boarding completed
+  const tabbar = document.getElementById("tabbar");
+  if(state.family){ tabbar.classList.add("show"); }
+  if(name==="passport") renderPassport();
+  if(name==="map") renderMap();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+document.addEventListener("click", e=>{
+  const t = e.target.closest("[data-go]");
+  if(t){ go(t.dataset.go); }
+});
+
+/* ============================================================
+   RENDERERS
+   ============================================================ */
+function typeBadge(t){
+  const map = {
+    physical:"Physical",
+    creative:"Creative",
+    family:"Family",
+    interactive:"Interactive"
+  };
+  return `<span class="badge ${t}">${map[t]||t}</span>`;
+}
+function locIcon(){ return "📍"; }
+
+function renderMap(){
+  const list = document.getElementById("stationList");
+  list.innerHTML = STATIONS.map(s=>`
+    <article class="station ${state.stamps[s.id]?'done':''}" data-num="${String(s.id).padStart(2,'0')}" data-id="${s.id}">
+      <div class="meta">
+        <div class="name">${s.name}</div>
+        <div class="loc">${locIcon()} ${s.location}</div>
+        ${typeBadge(s.type)}
+      </div>
+      <div class="go">›</div>
+    </article>
+  `).join("");
+
+  // Progress
+  const done = Object.keys(state.stamps).length;
+  const pct = Math.round((done/STATIONS.length)*100);
+  document.getElementById("progressCount").textContent = done;
+  document.getElementById("progressFill").style.width = pct+"%";
+  document.getElementById("progressPlane").style.left = pct+"%";
+
+  // Click to open
+  list.querySelectorAll(".station").forEach(card=>{
+    card.addEventListener("click", ()=>openStation(parseInt(card.dataset.id)));
+  });
+}
+
+function renderPassport(){
+  document.getElementById("passportName").textContent = state.family || "— Family —";
+  document.getElementById("stampsCount").textContent = Object.keys(state.stamps).length;
+  const grid = document.getElementById("stampsGrid");
+  grid.innerHTML = STATIONS.map(s=>{
+    if(state.stamps[s.id]){
+      const short = s.name.split("—")[0].trim();
+      return `<div class="stamp-slot filled" title="${s.name}">${short.length>14?short.slice(0,12)+"…":short}</div>`;
+    }
+    return `<div class="stamp-slot">${String(s.id).padStart(2,'0')}</div>`;
+  }).join("");
+}
+
+/* ============================================================
+   STATION MODAL
+   ============================================================ */
+const modal = document.getElementById("stationModal");
+function openStation(id){
+  const s = STATIONS.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById("modalNum").textContent = "Station " + String(id).padStart(2,'0') + " · " + s.month;
+  document.getElementById("modalTitle").textContent = s.name;
+  const completed = !!state.stamps[id];
+  const unlocked = !!state.unlocked[id] || completed;
+  const hasTrivia = Array.isArray(s.trivia) && s.trivia.length > 0;
+
+  let challengeBlock;
+  if(!unlocked){
+    challengeBlock = `
+      <div class="code-gate">
+        <div class="lock">🔒</div>
+        <h3>Gate locked</h3>
+        <p>Walk to the location above. Look for the <strong>Hebrew word</strong> displayed in the room and type it below to unlock your challenge.</p>
+        <input class="code-input" id="codeInput" maxlength="12" placeholder="HEBREO" autocomplete="off" autocapitalize="characters" inputmode="text"/>
+        <div class="code-error" id="codeError">Wrong code — ask a madrich for help!</div>
+        <button class="btn btn-warn mt-4" id="unlockBtn">Unlock challenge ✈</button>
+      </div>
+    `;
+  } else {
+    const triviaHTML = (hasTrivia && !completed)
+      ? `<div class="trivia" id="triviaHost"></div>`
+      : `<div class="btn-row">
+           ${completed
+             ? `<button class="btn btn-ghost" id="unstampBtn">Stamp already collected ✓</button>`
+             : `<button class="btn btn-warn" id="stampBtn">I completed this — Stamp my passport ✓</button>`}
+         </div>`;
+    challengeBlock = `
+      <div class="section">
+        <h3>The Challenge</h3>
+        <p>${s.challenge}</p>
+        ${s.materials?`<p style="margin-top:8px"><strong>Materials:</strong> <span class="muted">${s.materials}</span></p>`:``}
+      </div>
+
+      <div class="madrich-note">
+        <strong>👋 At this gate:</strong> Two madrichim are waiting to greet you, explain the challenge, hand out materials, and cheer you on. Find them in the matching shirts.
+      </div>
+
+      ${triviaHTML}
+    `;
+  }
+
+  document.getElementById("modalBody").innerHTML = `
+    <div class="info-row"><span class="ico">📍</span><span><strong>Go to:</strong> ${s.location}</span></div>
+    <div class="info-row"><span class="ico">🎯</span><span><strong>Type:</strong> ${typeBadge(s.type)}</span></div>
+    <div class="info-row"><span class="ico">🧭</span><span><strong>Eje:</strong> ${s.eje}</span></div>
+
+    <div class="section">
+      <h3>The Story</h3>
+      <p>${s.explanation}</p>
+    </div>
+
+    ${challengeBlock}
+
+    <button class="btn btn-ghost mt-4" id="backBtn">← Back to map</button>
+  `;
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  document.getElementById("backBtn").addEventListener("click", closeModal);
+
+  // unlock flow
+  const unlockBtn = document.getElementById("unlockBtn");
+  if(unlockBtn){
+    const input = document.getElementById("codeInput");
+    const err = document.getElementById("codeError");
+    const tryUnlock = ()=>{
+      const val = (input.value||"").trim().toUpperCase();
+      if(val === s.code){
+        state.unlocked[id] = true;
+        save();
+        openStation(id);
+      } else {
+        err.classList.add("show");
+        input.value = "";
+        input.focus();
+        setTimeout(()=>err.classList.remove("show"), 2000);
+      }
+    };
+    unlockBtn.addEventListener("click", tryUnlock);
+    input.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+    setTimeout(()=>input.focus(), 200);
+  }
+
+  // trivia flow
+  if(unlocked && hasTrivia && !completed){
+    mountTrivia(document.getElementById("triviaHost"), s);
+  }
+
+  // stamp / unstamp
+  const stampBtn = document.getElementById("stampBtn");
+  if(stampBtn) stampBtn.addEventListener("click", ()=>collectStamp(s));
+  const unstampBtn = document.getElementById("unstampBtn");
+  if(unstampBtn) unstampBtn.addEventListener("click", ()=>{
+    if(confirm("Remove this stamp?")){
+      delete state.stamps[id]; save(); closeModal(); renderMap();
+    }
+  });
+}
+
+function mountTrivia(host, s){
+  const total = s.trivia.length;
+  const passing = Math.max(1, Math.ceil(total * 0.75)); // 75%+ to pass
+  let current = 0;
+  let score = 0;
+  let answered = false;
+
+  function renderQuestion(){
+    const q = s.trivia[current];
+    const dots = s.trivia.map((_,i)=>{
+      let cls = "dot";
+      if(i < current) cls += " done";
+      else if(i === current) cls += " current";
+      return `<span class="${cls}"></span>`;
+    }).join("");
+    host.innerHTML = `
+      <div class="progress-mini">
+        <span>Question ${current+1} of ${total}</span>
+        <span class="dots">${dots}</span>
+      </div>
+      <div class="q">${q.q}</div>
+      <div class="trivia-options">
+        ${q.options.map((opt,i)=>`
+          <button class="trivia-opt" data-idx="${i}">
+            <span class="ico">${String.fromCharCode(65+i)}</span>
+            <span>${opt}</span>
+          </button>`).join("")}
+      </div>
+      <div class="trivia-feedback" id="triviaFb"></div>
+      <button class="btn btn-primary mt-2" id="triviaNext" style="display:none">
+        ${current === total-1 ? "See results →" : "Next question →"}
+      </button>
+    `;
+
+    host.querySelectorAll(".trivia-opt").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(answered) return;
+        answered = true;
+        const idx = parseInt(btn.dataset.idx, 10);
+        const correct = idx === q.correct;
+        if(correct) score++;
+        host.querySelectorAll(".trivia-opt").forEach((b,i)=>{
+          b.disabled = true;
+          if(i === q.correct) b.classList.add("correct");
+          if(i === idx && !correct) b.classList.add("wrong");
+        });
+        const fb = host.querySelector("#triviaFb");
+        fb.className = "trivia-feedback show " + (correct ? "fb-correct" : "fb-wrong");
+        fb.innerHTML = `<strong>${correct ? "✓ Correct!" : "✗ Not quite."}</strong> ${q.explain}`;
+        host.querySelector("#triviaNext").style.display = "block";
+      });
+    });
+
+    host.querySelector("#triviaNext").addEventListener("click", ()=>{
+      current++;
+      answered = false;
+      if(current >= total) renderResult();
+      else renderQuestion();
+    });
+  }
+
+  function renderResult(){
+    const pass = score >= passing;
+    host.innerHTML = `
+      <div class="trivia-score ${pass ? "" : "fail"}">
+        <div class="num">${score} / ${total}</div>
+        <div class="label">${pass ? "You earned the stamp!" : "Almost — try again"}</div>
+        <div class="msg">${pass
+          ? "Great teamwork! Tap below to add this stamp to your passport."
+          : `You need ${passing} or more correct to earn the stamp. The madrichim are happy to help with hints.`}</div>
+      </div>
+      <div class="btn-row">
+        ${pass
+          ? `<button class="btn btn-warn" id="triviaStamp">Stamp my passport ✓</button>`
+          : `<button class="btn btn-primary" id="triviaRetry">Try again</button>`}
+      </div>
+    `;
+    if(pass){
+      host.querySelector("#triviaStamp").addEventListener("click", ()=>collectStamp(s));
+    } else {
+      host.querySelector("#triviaRetry").addEventListener("click", ()=>{
+        current = 0; score = 0; answered = false;
+        renderQuestion();
+      });
+    }
+  }
+
+  renderQuestion();
+}
+function closeModal(){
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.getElementById("modalClose").addEventListener("click", closeModal);
+modal.addEventListener("click", e=>{ if(e.target===modal) closeModal(); });
+
+/* ============================================================
+   STAMPING
+   ============================================================ */
+function collectStamp(s){
+  state.stamps[s.id] = true;
+  save();
+  showStampAnim(s);
+  setTimeout(()=>{
+    closeModal();
+    renderMap();
+    if(Object.keys(state.stamps).length===STATIONS.length){
+      setTimeout(()=>{ launchCelebration(); }, 400);
+    }
+  }, 1100);
+}
+
+function showStampAnim(s){
+  const overlay = document.getElementById("stampOverlay");
+  document.getElementById("stampBig").textContent = "VISITED";
+  const short = s.name.split("—")[0].trim().toUpperCase();
+  document.getElementById("stampMid").textContent = short;
+  overlay.classList.add("show");
+  // re-trigger animation
+  const stamp = overlay.querySelector(".stamp");
+  stamp.style.animation = "none"; void stamp.offsetWidth; stamp.style.animation = "";
+  setTimeout(()=>overlay.classList.remove("show"), 1100);
+}
+
+/* ============================================================
+   COMPLETION + CONFETTI
+   ============================================================ */
+function launchCelebration(){
+  document.getElementById("finalName").textContent = state.family || "Family";
+  go("completion");
+  fireConfetti();
+}
+function fireConfetti(){
+  const c = document.getElementById("confetti");
+  c.innerHTML = "";
+  c.classList.add("show");
+  const colors = ["#0057B8","#F5C518","#FF8C42","#1FBF75","#C8102E"];
+  for(let i=0;i<80;i++){
+    const s = document.createElement("span");
+    s.style.left = Math.random()*100 + "vw";
+    s.style.background = colors[Math.floor(Math.random()*colors.length)];
+    s.style.animationDuration = (2 + Math.random()*2.5) + "s";
+    s.style.animationDelay = (Math.random()*0.6) + "s";
+    s.style.transform = `rotate(${Math.random()*360}deg)`;
+    c.appendChild(s);
+  }
+  setTimeout(()=>c.classList.remove("show"), 5000);
+}
+
+/* ============================================================
+   BOARDING
+   ============================================================ */
+function renderChildren(){
+  const n = Math.max(1, Math.min(10, parseInt(document.getElementById("numChildren").value || "1", 10)));
+  const container = document.getElementById("childrenList");
+  // Resize state.children to match n, preserving existing grades
+  while(state.children.length < n) state.children.push({grade:"K"});
+  while(state.children.length > n) state.children.pop();
+
+  container.innerHTML = state.children.map((c,i)=>`
+    <div class="child-row">
+      <label for="childGrade${i}">Child ${i+1}</label>
+      <select id="childGrade${i}" data-idx="${i}">
+        ${GRADES.map(g=>`<option value="${g}" ${c.grade===g?"selected":""}>${g==="K"?"Kindergarten":g+" grade"}</option>`).join("")}
+      </select>
+    </div>
+  `).join("");
+
+  container.querySelectorAll("select").forEach(sel=>{
+    sel.addEventListener("change", e=>{
+      const idx = parseInt(e.target.dataset.idx, 10);
+      state.children[idx].grade = e.target.value;
+    });
+  });
+}
+
+document.getElementById("numChildren").addEventListener("input", renderChildren);
+
+document.getElementById("startBtn").addEventListener("click", ()=>{
+  const name = document.getElementById("familyName").value.trim();
+  if(!name){
+    document.getElementById("familyName").focus();
+    document.getElementById("familyName").style.borderColor = "#C8102E";
+    return;
+  }
+  // sync grades from DOM (in case user changed without blur)
+  state.children.forEach((c,i)=>{
+    const sel = document.getElementById("childGrade"+i);
+    if(sel) c.grade = sel.value;
+  });
+  state.family = name;
+  save();
+  go("map");
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  if(confirm("This will erase all your stamps. Are you sure?")){
+    state.stamps = {};
+    save();
+    renderPassport();
+    renderMap();
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+load();
+document.getElementById("boarding-seq").textContent = state.seq;
+if(!Array.isArray(state.children) || state.children.length===0){
+  state.children = [{grade:"K"}];
+}
+if(state.family){
+  document.getElementById("familyName").value = state.family;
+  document.getElementById("tabbar").classList.add("show");
+}
+document.getElementById("numChildren").value = state.children.length;
+renderChildren();
+renderMap();
+renderPassport();
+</script>
+</body>
+</html>
