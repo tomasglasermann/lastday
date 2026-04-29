@@ -199,6 +199,94 @@
   .map-intro h2{margin-bottom:4px}
   .map-intro p{color:#3b4a66;font-size:.92rem}
 
+  /* ---------- Map view (rooms with pins) ---------- */
+  .map-view{margin-top:6px}
+  .map-zone{
+    border-radius:18px;
+    padding:14px 12px 12px;
+    margin-bottom:14px;
+    border:1px solid rgba(10,31,68,.06);
+    box-shadow:0 4px 14px rgba(10,31,68,.06);
+  }
+  .map-zone.outdoor{
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.4) 0%, transparent 50%),
+      linear-gradient(135deg, #D5F1E2 0%, #B8E5C8 100%);
+  }
+  .map-zone.indoor{
+    background:
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,.5) 0%, transparent 55%),
+      linear-gradient(135deg, #FFF8EC 0%, #FFEFD0 100%);
+  }
+  .zone-label{
+    font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+    color:#0A1F44;font-weight:800;margin-bottom:10px;opacity:.75;
+    display:flex;align-items:center;gap:6px;
+  }
+  .zone-icon{font-size:1rem}
+  .zone-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
+  }
+  @media(min-width:420px){
+    .zone-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(min-width:560px){
+    .zone-grid{grid-template-columns:repeat(4,1fr)}
+  }
+  .room{
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(2px);
+    border:1.5px solid rgba(10,31,68,.1);
+    border-radius:14px;
+    padding:10px 6px 8px;
+    min-height:84px;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:space-between;
+    text-align:center;gap:8px;
+    transition:transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .room.all-done{
+    background:rgba(213,241,226,.85);
+    border-color:#1FBF75;
+  }
+  .room-label{
+    font-size:.72rem;font-weight:700;color:#0A1F44;line-height:1.15;
+    letter-spacing:.01em;
+  }
+  .room-pins{
+    display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+  }
+  .room-pin{
+    width:34px;height:34px;border-radius:50%;
+    background:#0057B8;color:#fff;border:none;
+    display:grid;place-items:center;
+    font-weight:800;font-size:.85rem;
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+    box-shadow:0 4px 10px rgba(0,87,184,.35);
+    position:relative;
+  }
+  .room-pin:hover{transform:scale(1.12)}
+  .room-pin:active{transform:scale(1.05)}
+  .room-pin.unlocked:not(.done){
+    background:#FF8C42;
+    box-shadow:0 4px 10px rgba(255,140,66,.4);
+  }
+  .room-pin.done{
+    background:#1FBF75;
+    box-shadow:0 4px 10px rgba(31,191,117,.4);
+  }
+  .room-pin.done::after{
+    content:"✓";
+    position:absolute;top:-3px;right:-3px;
+    width:16px;height:16px;border-radius:50%;
+    background:#fff;color:#1FBF75;
+    display:grid;place-items:center;
+    font-size:.7rem;font-weight:900;
+    box-shadow:0 2px 4px rgba(0,0,0,.2);
+  }
+
+  /* ---------- Legacy list (kept for fallback compatibility) ---------- */
   .stations{
     position:relative;
     padding-left:34px;
@@ -621,8 +709,8 @@
     </div>
 
     <div class="map-intro">
-      <h2>Choose your next destination</h2>
-      <p>Pick any station you like, in any order — your map is unique to your family. Each station takes about 5–8 minutes.</p>
+      <h2>Your map of the JCC</h2>
+      <p>Each pin is a station. Tap any pin to see the challenge — you can visit in any order. Pins turn green ✓ when you collect a stamp.</p>
     </div>
 
     <div class="stations" id="stationList"><!-- populated by JS --></div>
@@ -1006,22 +1094,67 @@ function typeBadge(t){
 }
 function locIcon(){ return "📍"; }
 
+// JCC room map — each room can hold one or more stations (Plaza has 2)
+const ROOMS = [
+  // Outdoor zone
+  { name:"Soccer Field",       zone:"outdoor", stations:[15] },
+  { name:"Blue Playground",    zone:"outdoor", stations:[16] },
+  { name:"Basketball Outside", zone:"outdoor", stations:[9]  },
+  { name:"Plaza",              zone:"outdoor", stations:[19,20] },
+  // Indoor zone
+  { name:"Lobby",              zone:"indoor",  stations:[18] },
+  { name:"Yoga Room",          zone:"indoor",  stations:[1]  },
+  { name:"Dance Room 1",       zone:"indoor",  stations:[2]  },
+  { name:"Dance Room 2",       zone:"indoor",  stations:[3]  },
+  { name:"Katz",               zone:"indoor",  stations:[4]  },
+  { name:"Mifgash",            zone:"indoor",  stations:[5]  },
+  { name:"Senior Lounge",      zone:"indoor",  stations:[6]  },
+  { name:"Aerobics",           zone:"indoor",  stations:[7]  },
+  { name:"Kiblisky",           zone:"indoor",  stations:[8]  },
+  { name:"ASP 1",              zone:"indoor",  stations:[10] },
+  { name:"ASP 2",              zone:"indoor",  stations:[11] },
+  { name:"ASP 3",              zone:"indoor",  stations:[12] },
+  { name:"ASP 4",              zone:"indoor",  stations:[13] },
+  { name:"Webber",             zone:"indoor",  stations:[14] },
+  { name:"Basketball Inside",  zone:"indoor",  stations:[17] },
+];
+
 function renderMap(){
   ensureStationOrder();
   const list = document.getElementById("stationList");
-  const orderedStations = state.stationOrder
-    .map(id => STATIONS.find(s => s.id === id))
-    .filter(Boolean);
-  list.innerHTML = orderedStations.map(s=>`
-    <article class="station ${state.stamps[s.id]?'done':''}" data-num="${String(s.id).padStart(2,'0')}" data-id="${s.id}">
-      <div class="meta">
-        <div class="name">${s.name}</div>
-        <div class="loc">${locIcon()} ${s.location}</div>
-        ${typeBadge(s.type)}
+
+  const renderRoom = (room) => {
+    const allDone = room.stations.every(id => state.stamps[id]);
+    const pins = room.stations.map(id => {
+      const done = state.stamps[id] ? "done" : "";
+      const unlocked = state.unlocked[id] ? "unlocked" : "";
+      const s = STATIONS.find(x => x.id === id);
+      const label = s ? s.name.split("—")[0].trim() : "";
+      return `<button class="room-pin ${done} ${unlocked}" data-id="${id}" title="${label}" aria-label="Station ${id} — ${label}">${id}</button>`;
+    }).join("");
+    return `
+      <div class="room ${allDone?'all-done':''}">
+        <div class="room-label">${room.name}</div>
+        <div class="room-pins">${pins}</div>
       </div>
-      <div class="go">›</div>
-    </article>
-  `).join("");
+    `;
+  };
+
+  const outdoor = ROOMS.filter(r => r.zone === "outdoor").map(renderRoom).join("");
+  const indoor  = ROOMS.filter(r => r.zone === "indoor").map(renderRoom).join("");
+
+  list.innerHTML = `
+    <div class="map-view">
+      <div class="map-zone outdoor">
+        <div class="zone-label"><span class="zone-icon">🌳</span> Outdoor Spaces</div>
+        <div class="zone-grid">${outdoor}</div>
+      </div>
+      <div class="map-zone indoor">
+        <div class="zone-label"><span class="zone-icon">🏛</span> Inside the JCC</div>
+        <div class="zone-grid">${indoor}</div>
+      </div>
+    </div>
+  `;
 
   // Progress
   const done = Object.keys(state.stamps).length;
@@ -1030,9 +1163,12 @@ function renderMap(){
   document.getElementById("progressFill").style.width = pct+"%";
   document.getElementById("progressPlane").style.left = pct+"%";
 
-  // Click to open
-  list.querySelectorAll(".station").forEach(card=>{
-    card.addEventListener("click", ()=>openStation(parseInt(card.dataset.id)));
+  // Click pins to open stations
+  list.querySelectorAll(".room-pin").forEach(pin=>{
+    pin.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      openStation(parseInt(pin.dataset.id));
+    });
   });
 }
 
