@@ -203,10 +203,6 @@
     position:relative;
     padding-left:34px;
   }
-  .stations::before{
-    content:"";position:absolute;left:14px;top:8px;bottom:8px;
-    border-left:3px dashed #0057B8;opacity:.45;
-  }
   .station{
     position:relative;background:#fff;border-radius:16px;padding:14px 14px 14px 16px;
     margin-bottom:12px;border:1px solid rgba(10,31,68,.07);
@@ -287,11 +283,31 @@
   .section h3{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#0057B8;margin-bottom:8px}
   .section p, .section li{font-size:.95rem;color:#0A1F44}
   .section ul{margin:0;padding-left:20px}
-  .madrich-note{
-    margin-top:12px;background:#E8F1FF;border-left:4px solid #0057B8;
-    padding:12px 14px;border-radius:10px;font-size:.88rem;color:#0A1F44;
+  /* ---------- Photo capture ---------- */
+  .photo-prompt{
+    background:linear-gradient(135deg,#FFF8EC,#FFF3D9);
+    border:1.5px dashed #C9961A;
+    border-radius:14px;
+    padding:22px 18px;
+    margin-top:12px;
+    text-align:center;
   }
-  .madrich-note strong{color:#0057B8}
+  .photo-prompt-icon{font-size:2.4rem;line-height:1;margin-bottom:6px}
+  .photo-prompt h3{
+    font-size:1.05rem;color:#0A1F44;margin-bottom:6px;
+    letter-spacing:0;text-transform:none;
+  }
+  .photo-prompt p{
+    font-size:.9rem;color:#5b4a10;margin:6px 0 14px;
+  }
+  .photo-preview{
+    border-radius:14px;overflow:hidden;background:#0A1F44;
+    border:1px solid rgba(10,31,68,.1);
+    display:grid;place-items:center;
+  }
+  .photo-preview img{
+    max-width:100%;max-height:340px;display:block;
+  }
 
   /* ---------- Stamp animation ---------- */
   .stamp-overlay{
@@ -584,8 +600,8 @@
         <li>Tap any destination on your map to see where to go.</li>
         <li>Walk to the location in the JCC shown on the card.</li>
         <li>Find the <strong>Hebrew word</strong> on the wall and type it in to unlock your challenge.</li>
-        <li>Two madrichim at each station will help and hand out materials.</li>
-        <li>Complete the challenge → tap <em>Stamp my passport</em> → watch it fill up.</li>
+        <li>Do the challenge as a family — then <strong>take a family photo</strong> as proof.</li>
+        <li>Tap <em>Stamp my passport</em> → watch it fill up.</li>
         <li>Stamp all 20 to reach your final destination 🎉</li>
       </ul>
     </div>
@@ -606,7 +622,7 @@
 
     <div class="map-intro">
       <h2>Choose your next destination</h2>
-      <p>Stations are loosely ordered like our year — but you can travel in any order. Each one takes about 5–8 minutes.</p>
+      <p>Pick any station you like, in any order — your map is unique to your family. Each station takes about 5–8 minutes.</p>
     </div>
 
     <div class="stations" id="stationList"><!-- populated by JS --></div>
@@ -654,9 +670,9 @@
 
 <!-- ====================== TAB BAR ====================== -->
 <nav class="tabbar" id="tabbar" aria-label="Primary">
+  <button class="tab" data-go="boarding"><span class="ico">🎫</span>Pass</button>
   <button class="tab" data-go="map"><span class="ico">🗺</span>Map</button>
   <button class="tab" data-go="passport"><span class="ico">📘</span>Passport</button>
-  <button class="tab" data-go="boarding"><span class="ico">🎫</span>Pass</button>
 </nav>
 
 <!-- ====================== MODAL ====================== -->
@@ -691,25 +707,25 @@ const STATIONS = [
   {
     id:1, name:"Rosh Hashana — The Wishing Tree", code:"SHANA",
     eje:"Judaism", month:"September",
-    location:"Main Lobby — by the Wishing Tree",
+    location:"Yoga Room",
     type:"creative",
     explanation:"We started the year with apples and honey, dipping into sweetness and asking for a sweeter year ahead. Tonight your family adds your wish for what you hope our Maccabi family becomes next year.",
     challenge:"The Wishing Tree. As a family, talk together and decide on ONE wish you have for Maccabi Tzair Miami in the next year — for your kvutza, for the movement, for the community, for a kid you know. Write it together on a paper apple and decorate it. Hang your apple on the Wishing Tree. By the end of the night, the tree will be heavy with hopes from every Maccabi family.",
     materials:"Everything provided at the station"
   },
   {
-    id:2, name:"Katan Sleepover — First Time Brave", code:"OMETZ",
+    id:2, name:"Katan Sleepover — The Sleepover Selfie", code:"OMETZ",
     eje:"Community", month:"October",
-    location:"Quiet Corner — Brave Wall",
+    location:"Dance Room 1",
     type:"family",
-    explanation:"On the Katan Sleepover, our youngest chanichim spent their first night at the JCC without their parents — for many of them, it was the bravest thing they had ever done. Tonight every family celebrates a 'first time brave' moment of their own.",
-    challenge:"First Time Brave. Each family member writes or draws on a small paper badge ONE time in their life they were brave (lost a tooth, slept over without parents, gave a speech, learned to ride a bike, started a new school…). Pin everyone's badges together onto your Family Brave Banner. The madrich pins your banner to one parent's shirt — wear it proudly for the rest of the journey, and add your family name to the Brave Wall.",
+    explanation:"On the Katan Sleepover our youngest chanichim spent their first night at the JCC without their parents — pajamas, pillow fights, midnight snacks, brave faces and giggles. Tonight your family recreates that vibe.",
+    challenge:"The Sleepover Selfie. Together as a family, strike a 'sleepover scene' — one of you pretending to be asleep on the floor, another mid-pillow-fight, someone yawning, someone telling a midnight story. The wackier, the better. Take a fun family photo of your scene.",
     materials:"Everything provided at the station"
   },
   {
     id:3, name:"Sukkot — Family Sukkah Build", code:"SUKKAH",
     eje:"Judaism", month:"October",
-    location:"Outdoor Courtyard (by the garden)",
+    location:"Dance Room 2",
     type:"physical",
     explanation:"In Sukkot we build a little home open to the sky and to guests. The walls are temporary — what holds them up is community, working with whatever is in front of you, together.",
     challenge:"Family Sukkah Build. Using the materials at your station, work as a family to build a mini sukkah in under 2 minutes. It must stand on its own when you're done — no one holding it up. The madrichim will time you. Take a family photo inside your sukkah at the end.",
@@ -718,7 +734,7 @@ const STATIONS = [
   {
     id:4, name:"Simchat Torah — Family Hora", code:"SIMCHA",
     eje:"Judaism", month:"October",
-    location:"Multipurpose Room — Stage A",
+    location:"Katz",
     type:"physical",
     explanation:"On Simchat Torah we danced with the Torah and celebrated reaching the end of one year of reading and starting another. The dance never really stops — it just changes partners.",
     challenge:"Family Hora Circle. The madrichim will play 60 seconds of Israeli music — your family must form a circle, hold hands, and keep the circle moving until the song ends. Bonus stamp shape if you invite another family in to grow the circle!",
@@ -727,7 +743,7 @@ const STATIONS = [
   {
     id:5, name:"What is Maccabi Tzair? — Roots & Values", code:"CHAZAK",
     eje:"Community", month:"October",
-    location:"Library / Reading Corner",
+    location:"Mifgash",
     type:"interactive",
     explanation:"Maccabi Tzair was founded almost a century ago, and today reaches every continent. How well does your family really know our movement? Time to find out.",
     trivia:[
@@ -748,7 +764,7 @@ const STATIONS = [
   {
     id:6, name:"Building Our Kvutza — Family Shield", code:"KVUTZA",
     eje:"Community", month:"September",
-    location:"Classroom Aleph — Family Shields wall",
+    location:"Senior Lounge",
     type:"creative",
     explanation:"At the start of the year each kvutza chose its name, its color, its values. Tonight your family becomes its own kvutza — and designs its own shield.",
     challenge:"Your Family Shield. As a family, pick: (1) a kvutza name (a real word, an invented word, an inside joke — something that fits your family), (2) a color that represents you, (3) one value that describes your family (kindness, ruach, adventure, perseverance, humor…). Draw your shield on the canvas square — name across the top, value across the bottom, your color filling the middle. Hang it on the Family Shields wall.",
@@ -757,7 +773,7 @@ const STATIONS = [
   {
     id:7, name:"Israeli Culture — A Taste of Israel", code:"BAMBA",
     eje:"Zionism", month:"November",
-    location:"Kitchen / Dining Hall — tasting bar",
+    location:"Aerobics",
     type:"interactive",
     explanation:"Israel is a country you can taste — bambas in your pocket, halva on your tongue, krembo in winter. Tonight your family takes a blindfolded flavor tour and tries to identify what you're tasting and hearing.",
     challenge:"Blindfolded Taste & Sound Test. Each family member tries one Israeli food blindfolded and the madrich plays a 10-second clip of an Israeli song. As a family, get 3 right between you (foods + song) to earn the stamp.",
@@ -766,7 +782,7 @@ const STATIONS = [
   {
     id:8, name:"The Kvutza — The Family Cheer", code:"YACHAD",
     eje:"Community", month:"November",
-    location:"Multipurpose Room",
+    location:"Kiblisky",
     type:"family",
     explanation:"Every kvutza has a cheer — a 5-second burst of name, sound, and movement that tells the whole world who they are. Tonight your family invents one of your own.",
     challenge:"The Family Cheer. Together, invent a 5-second cheer for your family that includes: (1) your family name, (2) one sound everyone makes together, (3) one hand or body movement, (4) a jump at the end. Practice it twice. Perform it for the madrich. Use it any time you all meet up at another station for the rest of the night!",
@@ -775,7 +791,7 @@ const STATIONS = [
   {
     id:9, name:"Mini Maccabi Games — Family Relay", code:"RUACH",
     eje:"Community", month:"November",
-    location:"Outdoor Field",
+    location:"Basketball Outside",
     type:"physical",
     explanation:"At the Mini Maccabi Games every kvutza ran together, cheered together, and came home with sore legs and great stories. Tonight your family runs its own relay.",
     challenge:"Family Relay. Four cones at this station, four challenges: (1) jump rope x10, (2) basketball shot, (3) hop on one foot to the next cone, (4) balloon bop (keep a balloon up using only your head). Each family member does ONE of the four. Finish all four under 2 minutes for the stamp. The madrich times you and cheers loudly.",
@@ -784,7 +800,7 @@ const STATIONS = [
   {
     id:10, name:"Shabbat — The Shabbat Puzzle", code:"SHABBAT",
     eje:"Judaism", month:"December",
-    location:"Beit Knesset Annex — Shabbat table",
+    location:"ASP 1",
     type:"family",
     explanation:"Shabbat is built piece by piece — take any one away and it doesn't quite work. Tonight your family puts the picture back together.",
     challenge:"The Shabbat Puzzle. At your table is a Shabbat-themed puzzle. Work together as a family to assemble it. The madrich times you. Once complete, take a family photo with the finished puzzle. Bonus: name out loud every Shabbat object you can spot in the picture.",
@@ -793,7 +809,7 @@ const STATIONS = [
   {
     id:11, name:"Havdala — What Do You Know?", code:"HAVDALA",
     eje:"Judaism", month:"December",
-    location:"Hallway near auditorium — Havdala station",
+    location:"ASP 2",
     type:"interactive",
     explanation:"Havdala is a tiny ceremony but it's full of meaning — fire, spices, wine, song. Tonight, find out how much your family really knows about it.",
     trivia:[
@@ -814,7 +830,7 @@ const STATIONS = [
   {
     id:12, name:"Summer Plans — Where We're Headed", code:"KAYITZ",
     eje:"Community", month:"May",
-    location:"Lobby Lounge — Summer Departures wall",
+    location:"ASP 3",
     type:"creative",
     explanation:"The end of the year always points us toward the next adventure. Camp, beach, family trips, learning something new, doing nothing at all — every kind of summer is a story waiting to start.",
     challenge:"Pack Your Summer Suitcase. Each family member writes or draws ONE thing they're bringing to their summer on the paper suitcase — a place ('Camp Maccabi'), a feeling ('patience'), a goal ('learn to surf'), a person they'll see. Decorate it as a family. Hang it on the 'Summer Departures' wall — by the end of the night the wall will be full of suitcases ready for take-off.",
@@ -823,7 +839,7 @@ const STATIONS = [
   {
     id:13, name:"Tzahal — Trust Obstacle", code:"TZAHAL",
     eje:"Zionism", month:"January",
-    location:"Gym — far end (training zone)",
+    location:"ASP 4",
     type:"physical",
     explanation:"In the IDF, everyone depends on the person next to them — sometimes literally with their eyes closed. We learned this year that strength is built on trust, not on force.",
     challenge:"Trust Obstacle. One family member is blindfolded. The rest of the family must guide them through a small cone course using ONLY voice — no touching, no pointing. Switch roles once so a different family member gets to be the 'soldier'. Both runs must finish without knocking over a cone for the stamp.",
@@ -832,7 +848,7 @@ const STATIONS = [
   {
     id:14, name:"Chanichim Day — Pose & Snap", code:"KEN",
     eje:"Community", month:"February",
-    location:"Game Room — Pose Stage",
+    location:"Webber",
     type:"family",
     explanation:"On Chanichim Day the kids ran the show — they picked the songs, made the rules, designed the games. Tonight the kids in your family decide the silliest pose.",
     challenge:"Pose & Snap. The madrich shows your family a Pose Card — a funny image, a famous painting, a yoga shape, an animal, a Hebrew letter. Your family has 60 seconds to recreate the image as a group pose using your bodies — every family member must be in the photo. The madrich takes the photo with their phone and adds it to the closing slideshow. Bonus stamp shape if you can pose to form a Hebrew letter together.",
@@ -841,7 +857,7 @@ const STATIONS = [
   {
     id:15, name:"Mitzvah Day — The Family Pledge", code:"MITZVAH",
     eje:"Judaism", month:"February",
-    location:"Multipurpose Room B — Pledge table",
+    location:"Soccer Field",
     type:"family",
     explanation:"On Mitzvah Day we packed bags, wrote letters, and cleaned the park. We learned that the smallest action, repeated, becomes a habit — and a habit is a family's true character.",
     challenge:"The Family Pledge. Together, decide on ONE specific mitzvah your family will commit to doing in the next 30 days — something concrete (\"call Bubbe every Sunday\", \"donate the toys we don't play with\", \"say one nice thing at dinner\"). Write it on the pledge card. Sign it as a family. Take it home and put it on your fridge as a reminder.",
@@ -850,7 +866,7 @@ const STATIONS = [
   {
     id:16, name:"My Journey in Maccabi — Memory in Motion", code:"MASA",
     eje:"Community", month:"May",
-    location:"Auditorium hallway — Memory Stage",
+    location:"Blue Playground",
     type:"family",
     explanation:"At the end of every chanich's path with us comes the 6th grade trip — the rite of passage that closes one chapter. But the memories are made all year, in moments your kids will remember long after the songs fade.",
     challenge:"Memory in Motion. Ask the kids in your family: what was your favorite Maccabi memory from this year? (a peulah, a song, a moment at machane, a friend, a snack, a game…) As a family, recreate that memory in a single photo — everyone in the frame, posing or acting it out. The madrich photographs you and adds it to the closing slideshow.",
@@ -859,7 +875,7 @@ const STATIONS = [
   {
     id:17, name:"Israeli Innovation — Made in Israel", code:"CHIDUSH",
     eje:"Zionism", month:"February",
-    location:"STEM / Maker Room — Made in Israel wall",
+    location:"Basketball Inside",
     type:"interactive",
     explanation:"Israel is called 'Start-Up Nation' for a reason — its inventors have changed the way the whole world eats, drinks, drives, and talks. How many of those Israeli inventions does your family know about?",
     trivia:[
@@ -880,7 +896,7 @@ const STATIONS = [
   {
     id:18, name:"Machane — Build the Bonfire", code:"MACHANE",
     eje:"Community", month:"March",
-    location:"Outdoor Field — south corner (camp banner)",
+    location:"Lobby",
     type:"creative",
     explanation:"Every machane night ended at the bonfire — songs, stories, marshmallows, faces lit up by flame. Tonight your family builds its own.",
     challenge:"Build the Bonfire. With the materials waiting at your station, work as a family to build a bonfire that stands on its own. Once it's 'lit', sit around it for 30 seconds of silence as a family. Photo with your bonfire.",
@@ -889,7 +905,7 @@ const STATIONS = [
   {
     id:19, name:"Pesach — Find the Afikoman", code:"CHERUT",
     eje:"Judaism", month:"April",
-    location:"Dining Hall — long table",
+    location:"Plaza",
     type:"interactive",
     explanation:"Pesach asks every generation to tell the story again — and to ask why. The four questions are really just one: what does freedom mean to you?",
     trivia:[
@@ -908,7 +924,7 @@ const STATIONS = [
   {
     id:20, name:"Yom Haatzmaut — Israel's Birthday", code:"ATZMAUT",
     eje:"Zionism", month:"April",
-    location:"Outdoor Field — Blue & White zone",
+    location:"Plaza",
     type:"physical",
     explanation:"Every spring we paint our cheeks blue and white and celebrate the day Israel was born. The whole movement comes together — flags flying, music loud, falafel everywhere, hands in the air.",
     challenge:"Family Flag Moment. (1) One family member runs to the basket and grabs an Israeli flag for your family. (2) Together create a creative family pose with the flag — high, low, jumping, lifting one person, anything goes. (3) Each family member signs the giant 'Happy Birthday Israel!' banner with one wish for Israel for the year ahead. The madrich photographs your flag pose for the closing slideshow. End with a family shout: 'YOM HAATZMAUT SAMEACH!'",
@@ -919,14 +935,16 @@ const STATIONS = [
 /* ============================================================
    STATE
    ============================================================ */
-const STORAGE_KEY = "mtm_endyear_v7";
+const STORAGE_KEY = "mtm_endyear_v9";
 const GRADES = ["K","1st","2nd","3rd","4th","5th"];
 const state = {
   family: "",
   children: [{grade:"K"}],     // [{grade:"K"|"1st"|...}, ...]
   seq: "MTM-" + Math.floor(1000 + Math.random()*9000),
   stamps: {},                   // id -> true (challenge completed)
-  unlocked: {}                  // id -> true (code entered, challenge revealed)
+  unlocked: {},                 // id -> true (code entered, challenge revealed)
+  photos: {},                   // id -> base64 photo (proof of completion)
+  stationOrder: []              // shuffled station IDs (persistent per family)
 };
 
 function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -936,6 +954,18 @@ function load(){
     if(!raw) return;
     Object.assign(state, JSON.parse(raw));
   }catch(e){}
+}
+function ensureStationOrder(){
+  if(!Array.isArray(state.stationOrder) || state.stationOrder.length !== STATIONS.length){
+    // Fisher-Yates shuffle
+    const ids = STATIONS.map(s => s.id);
+    for(let i = ids.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [ids[i], ids[j]] = [ids[j], ids[i]];
+    }
+    state.stationOrder = ids;
+    save();
+  }
 }
 
 /* ============================================================
@@ -977,8 +1007,12 @@ function typeBadge(t){
 function locIcon(){ return "📍"; }
 
 function renderMap(){
+  ensureStationOrder();
   const list = document.getElementById("stationList");
-  list.innerHTML = STATIONS.map(s=>`
+  const orderedStations = state.stationOrder
+    .map(id => STATIONS.find(s => s.id === id))
+    .filter(Boolean);
+  list.innerHTML = orderedStations.map(s=>`
     <article class="station ${state.stamps[s.id]?'done':''}" data-num="${String(s.id).padStart(2,'0')}" data-id="${s.id}">
       <div class="meta">
         <div class="name">${s.name}</div>
@@ -1041,13 +1075,22 @@ function openStation(id){
       </div>
     `;
   } else {
-    const triviaHTML = (hasTrivia && !completed)
-      ? `<div class="trivia" id="triviaHost"></div>`
-      : `<div class="btn-row">
-           ${completed
-             ? `<button class="btn btn-ghost" id="unstampBtn">Stamp already collected ✓</button>`
-             : `<button class="btn btn-warn" id="stampBtn">I completed this — Stamp my passport ✓</button>`}
-         </div>`;
+    let actionBlock;
+    if(completed){
+      const photoHTML = (state.photos && state.photos[id])
+        ? `<div class="photo-preview" style="margin-top:12px"><img src="${state.photos[id]}" alt="Your family photo"/></div>`
+        : '';
+      actionBlock = `
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="unstampBtn">Stamp already collected ✓</button>
+        </div>
+        ${photoHTML}
+      `;
+    } else if(hasTrivia){
+      actionBlock = `<div class="trivia" id="triviaHost"></div>`;
+    } else {
+      actionBlock = `<div id="photoHost"></div>`;
+    }
     challengeBlock = `
       <div class="section">
         <h3>The Challenge</h3>
@@ -1055,11 +1098,7 @@ function openStation(id){
         ${s.materials?`<p style="margin-top:8px"><strong>Materials:</strong> <span class="muted">${s.materials}</span></p>`:``}
       </div>
 
-      <div class="madrich-note">
-        <strong>👋 At this gate:</strong> Two madrichim are waiting to greet you, explain the challenge, hand out materials, and cheer you on. Find them in the matching shirts.
-      </div>
-
-      ${triviaHTML}
+      ${actionBlock}
     `;
   }
 
@@ -1110,13 +1149,19 @@ function openStation(id){
     mountTrivia(document.getElementById("triviaHost"), s);
   }
 
-  // stamp / unstamp
-  const stampBtn = document.getElementById("stampBtn");
-  if(stampBtn) stampBtn.addEventListener("click", ()=>collectStamp(s));
+  // photo capture flow (non-trivia, not completed)
+  if(unlocked && !hasTrivia && !completed){
+    const host = document.getElementById("photoHost");
+    if(host) mountPhotoCapture(host, s);
+  }
+
+  // unstamp
   const unstampBtn = document.getElementById("unstampBtn");
   if(unstampBtn) unstampBtn.addEventListener("click", ()=>{
     if(confirm("Remove this stamp?")){
-      delete state.stamps[id]; save(); closeModal(); renderMap();
+      delete state.stamps[id];
+      if(state.photos) delete state.photos[id];
+      save(); closeModal(); renderMap();
     }
   });
 }
@@ -1210,6 +1255,71 @@ function mountTrivia(host, s){
 
   renderQuestion();
 }
+
+function mountPhotoCapture(host, s){
+  const id = s.id;
+
+  function render(){
+    const photo = state.photos && state.photos[id];
+    if(photo){
+      host.innerHTML = `
+        <div class="photo-preview"><img src="${photo}" alt="Your family photo"/></div>
+        <input type="file" accept="image/*" capture="environment" id="photoInput_${id}" hidden>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-ghost" id="retakeBtn_${id}">📷 Retake</button>
+          <button class="btn btn-warn" id="stampNowBtn_${id}">Stamp my passport ✓</button>
+        </div>
+      `;
+      host.querySelector(`#retakeBtn_${id}`).addEventListener("click", ()=>{
+        host.querySelector(`#photoInput_${id}`).click();
+      });
+      host.querySelector(`#photoInput_${id}`).addEventListener("change", handleFile);
+      host.querySelector(`#stampNowBtn_${id}`).addEventListener("click", ()=>collectStamp(s));
+    } else {
+      host.innerHTML = `
+        <div class="photo-prompt">
+          <div class="photo-prompt-icon">📷</div>
+          <h3>Show what you did!</h3>
+          <p>Take a family photo of your challenge to earn the stamp.</p>
+          <input type="file" accept="image/*" capture="environment" id="photoInput_${id}" hidden>
+          <button class="btn btn-warn" id="captureBtn_${id}">📷 Take family photo</button>
+        </div>
+      `;
+      host.querySelector(`#captureBtn_${id}`).addEventListener("click", ()=>{
+        host.querySelector(`#photoInput_${id}`).click();
+      });
+      host.querySelector(`#photoInput_${id}`).addEventListener("change", handleFile);
+    }
+  }
+
+  function handleFile(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement("canvas");
+        const maxDim = 800;
+        const ratio = Math.min(maxDim / Math.max(img.width, img.height), 1);
+        canvas.width = Math.round(img.width * ratio);
+        canvas.height = Math.round(img.height * ratio);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/jpeg", 0.7);
+        if(!state.photos) state.photos = {};
+        state.photos[id] = dataURL;
+        save();
+        render();
+      };
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  render();
+}
+
 function closeModal(){
   modal.classList.remove("open");
   document.body.style.overflow = "";
