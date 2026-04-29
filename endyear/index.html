@@ -394,26 +394,76 @@
   /* ---------- Stamp animation ---------- */
   .stamp-overlay{
     position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-    background:rgba(10,31,68,.6);z-index:100;
+    background:rgba(10,31,68,.65);z-index:100;
+    overflow:hidden;
   }
   .stamp-overlay.show{display:flex;animation:fade .25s ease}
-  .stamp{
-    width:220px;height:220px;border-radius:50%;
-    border:6px solid #C8102E;color:#C8102E;
-    display:grid;place-items:center;text-align:center;
-    background:rgba(255,248,236,.95);
-    transform:rotate(-12deg) scale(.3);
-    animation:stampIn .6s cubic-bezier(.2,.9,.3,1.4) forwards;
-    font-weight:900;letter-spacing:.05em;
-    box-shadow:0 20px 40px rgba(0,0,0,.3);
+  .stamp-overlay.show::before{
+    content:"";position:absolute;inset:0;background:#fff;
+    opacity:0;animation:flashScreen .35s ease-out forwards;
+    animation-delay:.3s;pointer-events:none;
   }
-  .stamp .big{font-size:1.4rem;line-height:1;margin-bottom:6px}
-  .stamp .mid{font-size:.85rem;line-height:1.1;padding:0 18px}
+  @keyframes flashScreen{
+    0%{opacity:0}
+    30%{opacity:.55}
+    100%{opacity:0}
+  }
+  .stamp{
+    position:relative;
+    width:240px;height:240px;border-radius:50%;
+    border:7px solid #C8102E;color:#C8102E;
+    display:grid;place-items:center;text-align:center;
+    background:rgba(255,248,236,.96);
+    transform:translateY(-300px) rotate(40deg) scale(2.5);
+    opacity:0;
+    animation:stampImpact .9s cubic-bezier(.34,1.56,.64,1) forwards;
+    font-weight:900;letter-spacing:.05em;
+    box-shadow:
+      0 25px 50px rgba(0,0,0,.4),
+      inset 0 0 0 3px rgba(200,16,46,.35),
+      inset 0 0 22px rgba(200,16,46,.18);
+    z-index:2;
+  }
+  .stamp::after{
+    content:"";position:absolute;inset:-40px;border-radius:50%;
+    background:radial-gradient(circle, rgba(200,16,46,.45) 0%, rgba(200,16,46,.1) 45%, transparent 70%);
+    opacity:0;z-index:-1;
+    animation:stampSplash .75s ease-out forwards;
+    animation-delay:.32s;
+  }
+  .stamp .big{font-size:1.6rem;line-height:1;margin-bottom:6px;text-shadow:0 1px 0 rgba(200,16,46,.2)}
+  .stamp .mid{font-size:.9rem;line-height:1.15;padding:0 18px}
   .stamp .small{font-size:.65rem;margin-top:8px;opacity:.8;letter-spacing:.18em}
-  @keyframes stampIn{
-    0%{transform:rotate(20deg) scale(2);opacity:0}
-    60%{transform:rotate(-15deg) scale(.9);opacity:1}
-    100%{transform:rotate(-12deg) scale(1);opacity:1}
+  @keyframes stampImpact{
+    0%   {transform:translateY(-300px) rotate(40deg) scale(2.5);opacity:0}
+    32%  {transform:translateY(0) rotate(-18deg) scale(1.45);opacity:1}
+    45%  {transform:translateY(-22px) rotate(-13deg) scale(.82)}
+    60%  {transform:translateY(0) rotate(-15deg) scale(1.12)}
+    75%  {transform:translateY(-8px) rotate(-12deg) scale(.96)}
+    88%  {transform:translateY(0) rotate(-12deg) scale(1.03)}
+    100% {transform:translateY(0) rotate(-12deg) scale(1);opacity:1}
+  }
+  @keyframes stampSplash{
+    0%   {transform:scale(.3);opacity:0}
+    25%  {transform:scale(1.15);opacity:1}
+    100% {transform:scale(2.4);opacity:0}
+  }
+  .stamp-particles{
+    position:absolute;top:50%;left:50%;
+    width:0;height:0;pointer-events:none;z-index:3;
+  }
+  .stamp-particles span{
+    position:absolute;top:0;left:0;
+    width:32px;height:32px;
+    margin:-16px 0 0 -16px;
+    font-size:22px;line-height:32px;text-align:center;
+    opacity:0;
+    animation:particleFly 1s cubic-bezier(.45,.5,.7,1.4) forwards;
+  }
+  @keyframes particleFly{
+    0%   {opacity:0;transform:translate(0,0) scale(.3) rotate(0)}
+    18%  {opacity:1;transform:translate(0,0) scale(1.2) rotate(60deg)}
+    100% {opacity:0;transform:translate(var(--dx,100px),var(--dy,100px)) scale(.6) rotate(540deg)}
   }
 
   /* ---------- Passport screen ---------- */
@@ -776,6 +826,7 @@
     <div class="big" id="stampBig">VISITED</div>
     <div class="mid" id="stampMid">Station Name</div>
     <div class="small">MACCABI TZAIR · MIAMI</div>
+    <div class="stamp-particles" id="stampParticles"></div>
   </div>
 </div>
 
@@ -910,12 +961,12 @@ const STATIONS = [
     materials:"None — just your phone"
   },
   {
-    id:12, name:"Summer Plans — Where We're Headed", code:"KAYITZ",
-    eje:"Community", month:"May",
+    id:12, name:"Welcome Back — Pack Your Story", code:"BARUCH",
+    eje:"Community", month:"January",
     location:"ASP 3",
     type:"creative",
-    explanation:"The end of the year always points us toward the next adventure. Camp, beach, family trips, learning something new, doing nothing at all — every kind of summer is a story waiting to start.",
-    challenge:"Pack Your Summer Suitcase. Each family member writes or draws ONE thing they're bringing to their summer on the paper suitcase — a place ('Camp Maccabi'), a feeling ('patience'), a goal ('learn to surf'), a person they'll see. Decorate it as a family. Hang it on the 'Summer Departures' wall — by the end of the night the wall will be full of suitcases ready for take-off.",
+    explanation:"After every break we come back to Maccabi with new stories — vacations, holidays, things we learned, new friends. Tonight your family packs those stories to bring back to the kvutza.",
+    challenge:"Pack Your Welcome Back Suitcase. Each family member writes or draws ONE story they want to bring back to share with their kvutza (a vacation memory, a new skill, a person they met, a place they went, something funny that happened). Decorate the family suitcase together. Hang it on the 'Welcome Back' wall — by the end of the night the wall will be full of stories from every Maccabi family.",
     materials:"Everything provided at the station"
   },
   {
@@ -933,7 +984,7 @@ const STATIONS = [
     location:"Webber",
     type:"family",
     explanation:"On Chanichim Day the kids ran the show — they picked the songs, made the rules, designed the games. Tonight the kids in your family decide the silliest pose.",
-    challenge:"Pose & Snap. The madrich shows your family a Pose Card — a funny image, a famous painting, a yoga shape, an animal, a Hebrew letter. Your family has 60 seconds to recreate the image as a group pose using your bodies — every family member must be in the photo. The madrich takes the photo with their phone and adds it to the closing slideshow. Bonus stamp shape if you can pose to form a Hebrew letter together.",
+    challenge:"Pose & Snap. Pick a Pose Card from the table — a funny image, a famous painting, a yoga shape, an animal, a Hebrew letter. Your family has 60 seconds to recreate the image as a group pose using your bodies — every family member must be in the photo. Take a family selfie of your pose and upload it here. Bonus stamp shape if you can pose to form a Hebrew letter together.",
     materials:"Everything provided at the station"
   },
   {
@@ -951,7 +1002,7 @@ const STATIONS = [
     location:"Blue Playground",
     type:"family",
     explanation:"At the end of every chanich's path with us comes the 6th grade trip — the rite of passage that closes one chapter. But the memories are made all year, in moments your kids will remember long after the songs fade.",
-    challenge:"Memory in Motion. Ask the kids in your family: what was your favorite Maccabi memory from this year? (a peulah, a song, a moment at machane, a friend, a snack, a game…) As a family, recreate that memory in a single photo — everyone in the frame, posing or acting it out. The madrich photographs you and adds it to the closing slideshow.",
+    challenge:"Memory in Motion. Ask the kids in your family: what was your favorite Maccabi memory from this year? (a peulah, a song, a moment at machane, a friend, a snack, a game…) As a family, recreate that memory in a single photo — everyone in the frame, posing or acting it out. Take the family selfie and upload it here.",
     materials:"Everything provided at the station"
   },
   {
@@ -1009,7 +1060,7 @@ const STATIONS = [
     location:"Plaza",
     type:"physical",
     explanation:"Every spring we paint our cheeks blue and white and celebrate the day Israel was born. The whole movement comes together — flags flying, music loud, falafel everywhere, hands in the air.",
-    challenge:"Family Flag Moment. (1) One family member runs to the basket and grabs an Israeli flag for your family. (2) Together create a creative family pose with the flag — high, low, jumping, lifting one person, anything goes. (3) Each family member signs the giant 'Happy Birthday Israel!' banner with one wish for Israel for the year ahead. The madrich photographs your flag pose for the closing slideshow. End with a family shout: 'YOM HAATZMAUT SAMEACH!'",
+    challenge:"Family Flag Moment. (1) One family member runs to the basket and grabs an Israeli flag for your family. (2) Together create a creative family pose with the flag — high, low, jumping, lifting one person, anything goes. (3) Each family member signs the giant 'Happy Birthday Israel!' banner with one wish for Israel for the year ahead. Take a family photo of your flag pose and upload it here. End with a family shout: 'YOM HAATZMAUT SAMEACH!'",
     materials:"Everything provided at the station"
   }
 ];
@@ -1493,19 +1544,38 @@ function collectStamp(s){
     if(Object.keys(state.stamps).length===STATIONS.length){
       setTimeout(()=>{ launchCelebration(); }, 400);
     }
-  }, 1100);
+  }, 1500);
 }
 
 function showStampAnim(s){
   const overlay = document.getElementById("stampOverlay");
-  document.getElementById("stampBig").textContent = "VISITED";
+  document.getElementById("stampBig").textContent = "STAMPED!";
   const short = s.name.split("—")[0].trim().toUpperCase();
   document.getElementById("stampMid").textContent = short;
+
+  // Generate flying particles around the stamp
+  const particles = document.getElementById("stampParticles");
+  particles.innerHTML = "";
+  const symbols = ["★", "✨", "🎉", "✓", "⭐", "✡"];
+  const count = 14;
+  for(let i = 0; i < count; i++){
+    const angle = (i / count) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+    const distance = 150 + Math.random() * 70;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+    const span = document.createElement("span");
+    span.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    span.style.setProperty("--dx", `${dx}px`);
+    span.style.setProperty("--dy", `${dy}px`);
+    span.style.animationDelay = `${0.32 + Math.random() * 0.18}s`;
+    particles.appendChild(span);
+  }
+
   overlay.classList.add("show");
-  // re-trigger animation
+  // re-trigger main stamp animation
   const stamp = overlay.querySelector(".stamp");
   stamp.style.animation = "none"; void stamp.offsetWidth; stamp.style.animation = "";
-  setTimeout(()=>overlay.classList.remove("show"), 1100);
+  setTimeout(()=>overlay.classList.remove("show"), 1500);
 }
 
 /* ============================================================
