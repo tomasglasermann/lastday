@@ -7,8 +7,15 @@
 <title>Maccabi Tzair Miami — End of Year Journey</title>
 <style>
   /* ---------- Reset & base ---------- */
-  *,*::before,*::after{box-sizing:border-box}
-  html,body{margin:0;padding:0;-webkit-text-size-adjust:100%}
+  *,*::before,*::after{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+  }
+  html,body{
+    margin:0;padding:0;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
   body{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color:#0A1F44;
@@ -17,10 +24,39 @@
       radial-gradient(900px 500px at 110% 10%, #FFD8A8 0%, transparent 55%),
       linear-gradient(180deg, #EAF4FF 0%, #FFF8EC 100%);
     min-height:100vh;
+    min-height:100dvh; /* dynamic viewport for mobile browser chrome */
     overflow-x:hidden;
+    overscroll-behavior-y:contain;
   }
   img{max-width:100%;display:block}
-  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button{
+    font:inherit;cursor:pointer;border:none;background:none;color:inherit;
+    touch-action:manipulation;
+  }
+  input,select,textarea{
+    font-family:inherit;
+    font-size:16px; /* prevents iOS zoom on focus */
+    touch-action:manipulation;
+  }
+  /* Smooth, responsive interactions */
+  .btn,.tab,.map-card,.room-pin,.station,.trivia-opt,.stamp-slot{
+    touch-action:manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  /* Momentum scroll inside modals */
+  .modal-card,.app{
+    -webkit-overflow-scrolling:touch;
+  }
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
   h1,h2,h3{margin:0;letter-spacing:-0.01em}
   h1{font-size:1.6rem;line-height:1.15}
   h2{font-size:1.25rem;line-height:1.2}
@@ -576,6 +612,154 @@
     to{transform:translateY(110vh) rotate(720deg);opacity:.2}
   }
 
+  /* ---------- Podium screen ---------- */
+  .podium-intro{text-align:center;padding:6px 4px 14px}
+  .podium-intro h1{font-size:1.7rem;line-height:1.1}
+  .podium-intro .live{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#FFE2D1;color:#B0481A;
+    padding:4px 12px;border-radius:999px;font-size:.7rem;
+    font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .podium-intro .live::before{
+    content:"";width:8px;height:8px;border-radius:50%;
+    background:#FF8C42;box-shadow:0 0 0 0 rgba(255,140,66,.6);
+    animation:liveDot 1.4s infinite;
+  }
+  @keyframes liveDot{
+    0%{box-shadow:0 0 0 0 rgba(255,140,66,.6)}
+    70%{box-shadow:0 0 0 8px rgba(255,140,66,0)}
+    100%{box-shadow:0 0 0 0 rgba(255,140,66,0)}
+  }
+  .podium-intro p{color:#3b4a66;font-size:.92rem;margin-top:6px}
+
+  .podium-stage{
+    display:grid;grid-template-columns:1fr 1.15fr 1fr;
+    align-items:end;gap:6px;
+    padding:12px 4px 0;margin:14px 0;
+    min-height:220px;
+  }
+  .podium-spot{
+    text-align:center;display:flex;flex-direction:column;align-items:center;
+    animation:spotPop .5s cubic-bezier(.2,1.6,.4,1) backwards;
+  }
+  .podium-spot.silver{animation-delay:.05s}
+  .podium-spot.gold{animation-delay:.15s}
+  .podium-spot.bronze{animation-delay:.25s}
+  @keyframes spotPop{
+    0%{opacity:0;transform:translateY(20px) scale(.8)}
+    100%{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .podium-spot .medal{
+    font-size:2.4rem;line-height:1;margin-bottom:6px;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));
+  }
+  .podium-spot .pname{
+    font-weight:800;font-size:.84rem;line-height:1.2;
+    color:#0A1F44;padding:0 4px;
+    min-height:2.4em;display:flex;align-items:end;justify-content:center;
+    word-break:break-word;
+  }
+  .podium-spot .pscore{
+    font-size:.78rem;color:#5b6b86;font-weight:700;margin:4px 0 8px;
+  }
+  .podium-spot .step{
+    width:100%;border-radius:14px 14px 0 0;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding-top:10px;color:rgba(0,0,0,.5);
+    font-weight:900;font-size:1.5rem;
+  }
+  .podium-spot.gold .step{
+    height:120px;
+    background:linear-gradient(180deg,#FFD340 0%,#F5C518 100%);
+    box-shadow:0 -3px 12px rgba(245,197,24,.35), inset 0 2px 0 rgba(255,255,255,.5);
+  }
+  .podium-spot.silver .step{
+    height:88px;
+    background:linear-gradient(180deg,#E0E0E0 0%,#A8A8A8 100%);
+    box-shadow:0 -3px 12px rgba(160,160,160,.3), inset 0 2px 0 rgba(255,255,255,.6);
+  }
+  .podium-spot.bronze .step{
+    height:66px;
+    background:linear-gradient(180deg,#D89060 0%,#A86830 100%);
+    box-shadow:0 -3px 12px rgba(176,112,48,.3), inset 0 2px 0 rgba(255,255,255,.4);
+  }
+  .podium-spot.empty .pname,
+  .podium-spot.empty .pscore{opacity:.4}
+  .podium-spot.empty .step{
+    background:linear-gradient(180deg,#E5E5E5 0%,#C5C5C5 100%) !important;
+    box-shadow:none;
+    opacity:.55;
+  }
+  .podium-spot.me .medal{transform:scale(1.1)}
+  .podium-spot.me .pname{color:#0057B8}
+  .podium-spot.me .pname::after{content:" ⭐"}
+
+  .podium-list-wrap{
+    background:rgba(255,248,236,.92);
+    border-radius:16px;padding:14px 12px;
+    border:1px solid rgba(10,31,68,.08);
+    box-shadow:0 6px 16px rgba(10,31,68,.06);
+  }
+  .podium-list-wrap .list-head{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:.85rem;font-weight:800;color:#0A1F44;
+    margin-bottom:10px;padding:0 4px;letter-spacing:.04em;
+  }
+  .podium-list-wrap .list-head .count{
+    font-size:.75rem;font-weight:600;color:#5b6b86;
+  }
+  .podium-list{display:flex;flex-direction:column;gap:5px}
+  .podium-row{
+    display:grid;grid-template-columns:34px 1fr auto;gap:10px;
+    align-items:center;padding:10px 12px;
+    border-radius:11px;background:#fff;
+    font-size:.92rem;
+    border:1px solid rgba(10,31,68,.06);
+    transition:background .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  .podium-row.me{
+    background:linear-gradient(135deg, rgba(0,87,184,.08), rgba(0,87,184,.18));
+    border-color:rgba(0,87,184,.35);
+    box-shadow:0 2px 8px rgba(0,87,184,.12);
+  }
+  .podium-row.completed{
+    background:linear-gradient(135deg, rgba(31,191,117,.1), rgba(31,191,117,.18));
+    border-color:rgba(31,191,117,.35);
+  }
+  .podium-row.me.completed{
+    background:linear-gradient(135deg, rgba(245,197,24,.18), rgba(245,197,24,.32));
+    border-color:rgba(245,197,24,.5);
+  }
+  .podium-row .rank{
+    font-weight:800;text-align:center;color:#5b6b86;
+    font-size:.95rem;
+  }
+  .podium-row .pname{
+    font-weight:600;color:#0A1F44;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .podium-row.me .pname{font-weight:800;color:#0057B8}
+  .podium-row .pscore{
+    font-weight:800;color:#0057B8;font-size:.94rem;
+    white-space:nowrap;font-variant-numeric:tabular-nums;
+  }
+  .podium-row.completed .pscore{color:#1FBF75}
+  .podium-row.completed .pscore::before{content:"✓ "}
+
+  .podium-empty{
+    text-align:center;color:#5b6b86;padding:30px 16px;
+    font-size:.92rem;
+  }
+  .podium-empty .icon{font-size:2.4rem;margin-bottom:10px}
+  .podium-offline{
+    text-align:center;background:rgba(255,140,66,.1);
+    border:1px dashed rgba(255,140,66,.4);
+    border-radius:12px;padding:14px;
+    color:#B0481A;font-size:.85rem;
+  }
+
   /* ---------- Bottom Nav ---------- */
   .tabbar{
     position:fixed;bottom:0;left:0;right:0;
@@ -860,12 +1044,44 @@
     </div>
   </section>
 
+  <!-- ====================== PODIUM ====================== -->
+  <section id="screen-podium" class="screen">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">Family Podium</div>
+        <div class="brand-sub">End of Year · 5786</div>
+      </div>
+    </div>
+
+    <div class="podium-intro">
+      <span class="live">Live</span>
+      <h1>🏆 The Family Podium</h1>
+      <p>See how every family is racing through the journey — updates live every few seconds.</p>
+    </div>
+
+    <div class="podium-stage" id="podiumStage">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="podium-list-wrap">
+      <div class="list-head">
+        <span>All families</span>
+        <span class="count" id="podiumCount">—</span>
+      </div>
+      <div class="podium-list" id="podiumList">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <!-- ====================== TAB BAR ====================== -->
 <nav class="tabbar" id="tabbar" aria-label="Primary">
   <button class="tab" data-go="boarding"><span class="ico">🎫</span>Pass</button>
   <button class="tab" data-go="map"><span class="ico">🗺</span>Map</button>
+  <button class="tab" data-go="podium"><span class="ico">🏆</span>Podium</button>
   <button class="tab" data-go="passport"><span class="ico">📘</span>Passport</button>
 </nav>
 
@@ -1157,7 +1373,7 @@ function stationIcon(id){ return STATION_ICONS[id] || "★"; }
 /* ============================================================
    STATE
    ============================================================ */
-const STORAGE_KEY = "mtm_endyear_v10";
+const STORAGE_KEY = "mtm_endyear_v11";
 const GRADES = ["K","1st","2nd","3rd","4th","5th"];
 const state = {
   family: "",
@@ -1166,7 +1382,9 @@ const state = {
   stamps: {},                   // id -> true (challenge completed)
   unlocked: {},                 // id -> true (code entered, challenge revealed)
   photos: {},                   // id -> base64 photo (proof of completion)
-  stationOrder: []              // shuffled station IDs (persistent per family)
+  stationOrder: [],             // shuffled station IDs (persistent per family)
+  startedAt: null,              // when the family checked in
+  completedAt: null             // when all stamps were collected
 };
 
 function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -1193,7 +1411,7 @@ function ensureStationOrder(){
 /* ============================================================
    NAVIGATION
    ============================================================ */
-const screens = ["boarding","map","passport","completion"];
+const screens = ["boarding","map","passport","completion","podium"];
 function go(name){
   screens.forEach(s=>{
     document.getElementById("screen-"+s).classList.toggle("active", s===name);
@@ -1206,6 +1424,8 @@ function go(name){
   if(state.family){ tabbar.classList.add("show"); }
   if(name==="passport") renderPassport();
   if(name==="map") renderMap();
+  if(name==="podium") startPodiumPolling();
+  else stopPodiumPolling();
   window.scrollTo({top:0,behavior:"instant"});
 }
 
@@ -1339,6 +1559,143 @@ function renderPassport(){
     }
     return `<div class="stamp-slot"></div>`;
   }).join("");
+}
+
+/* ============================================================
+   LIVE PODIUM
+   ============================================================ */
+let podiumPollInterval = null;
+let podiumLastFetchOk = true;
+
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+async function pushFamilyProgress(){
+  if(!state.family || !state.seq) return;
+  const stampsCount = Object.keys(state.stamps).length;
+  const allDone = stampsCount === STATIONS.length;
+  if(allDone && !state.completedAt){
+    state.completedAt = Date.now();
+    save();
+  }
+  try{
+    await fetch("/api/podium", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        id: state.seq,
+        name: state.family,
+        stamps: stampsCount,
+        startedAt: state.startedAt || Date.now(),
+        completedAt: allDone ? state.completedAt : null
+      })
+    });
+  } catch(e){
+    /* silent — don't break the family experience */
+  }
+}
+
+async function fetchPodium(){
+  try{
+    const r = await fetch("/api/podium", { cache:"no-store" });
+    if(!r.ok) throw new Error("status " + r.status);
+    const data = await r.json();
+    podiumLastFetchOk = true;
+    renderPodium(data);
+  } catch(e){
+    podiumLastFetchOk = false;
+    renderPodiumOffline();
+  }
+}
+
+function emptySpot(kind){
+  const medal = kind === "gold" ? "🥇" : kind === "silver" ? "🥈" : "🥉";
+  return `<div class="podium-spot ${kind} empty">
+    <div class="medal">${medal}</div>
+    <div class="pname">—</div>
+    <div class="pscore">—</div>
+    <div class="step"></div>
+  </div>`;
+}
+
+function spotForFamily(f, kind){
+  if(!f) return emptySpot(kind);
+  const medal = kind === "gold" ? "🥇" : kind === "silver" ? "🥈" : "🥉";
+  const isMe = f.id === state.seq;
+  return `<div class="podium-spot ${kind} ${isMe ? "me" : ""}">
+    <div class="medal">${medal}</div>
+    <div class="pname">${escapeHtml(f.name)}</div>
+    <div class="pscore">${f.stamps}/${STATIONS.length}${f.completedAt ? " ✓" : ""}</div>
+    <div class="step"></div>
+  </div>`;
+}
+
+function renderPodium(data){
+  const families = (data && data.families) || [];
+  const stage = document.getElementById("podiumStage");
+  const list = document.getElementById("podiumList");
+  const countEl = document.getElementById("podiumCount");
+
+  countEl.textContent = families.length
+    ? `${families.length} ${families.length === 1 ? "family" : "families"}`
+    : "—";
+
+  const [first, second, third] = families;
+  // Visual order: silver (left), gold (center), bronze (right)
+  stage.innerHTML = `
+    ${spotForFamily(second, "silver")}
+    ${spotForFamily(first, "gold")}
+    ${spotForFamily(third, "bronze")}
+  `;
+
+  if(families.length === 0){
+    list.innerHTML = `<div class="podium-empty">
+      <div class="icon">🛫</div>
+      <div>No families have started yet — be the first to take off!</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = families.map((f, i) => {
+    const isMe = f.id === state.seq;
+    const completed = f.stamps === STATIONS.length;
+    return `<div class="podium-row ${isMe ? "me" : ""} ${completed ? "completed" : ""}">
+      <div class="rank">${i + 1}</div>
+      <div class="pname">${escapeHtml(f.name)}${isMe ? " · you" : ""}</div>
+      <div class="pscore">${f.stamps}/${STATIONS.length}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderPodiumOffline(){
+  const stage = document.getElementById("podiumStage");
+  const list = document.getElementById("podiumList");
+  const countEl = document.getElementById("podiumCount");
+  countEl.textContent = "offline";
+  stage.innerHTML = `${emptySpot("silver")}${emptySpot("gold")}${emptySpot("bronze")}`;
+  list.innerHTML = `<div class="podium-offline">
+    📡 Live podium is warming up — check back in a few seconds.
+  </div>`;
+}
+
+function startPodiumPolling(){
+  if(podiumPollInterval) return;
+  fetchPodium();
+  // Push our own current standing too so we appear right away
+  pushFamilyProgress();
+  podiumPollInterval = setInterval(fetchPodium, 8000);
+}
+function stopPodiumPolling(){
+  if(podiumPollInterval){
+    clearInterval(podiumPollInterval);
+    podiumPollInterval = null;
+  }
 }
 
 /* ============================================================
@@ -1622,8 +1979,12 @@ modal.addEventListener("click", e=>{ if(e.target===modal) closeModal(); });
    ============================================================ */
 function collectStamp(s){
   state.stamps[s.id] = true;
+  if(Object.keys(state.stamps).length === STATIONS.length && !state.completedAt){
+    state.completedAt = Date.now();
+  }
   save();
   showStampAnim(s);
+  pushFamilyProgress();
   setTimeout(()=>{
     closeModal();
     renderMap();
@@ -1731,7 +2092,9 @@ document.getElementById("startBtn").addEventListener("click", ()=>{
     if(sel) c.grade = sel.value;
   });
   state.family = name;
+  if(!state.startedAt) state.startedAt = Date.now();
   save();
+  pushFamilyProgress();   // claim the family's spot on the podium
   go("map");
 });
 
