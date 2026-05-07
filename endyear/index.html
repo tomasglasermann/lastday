@@ -280,6 +280,30 @@
     background:rgba(255,243,217,.93);
     border-color:#FF8C42;
   }
+  .map-card.next-up{
+    border-color:#0057B8;
+    border-width:2.5px;
+    box-shadow:0 6px 18px rgba(0,87,184,.22), 0 0 0 4px rgba(0,87,184,.08);
+    animation:nextPulse 2s ease-in-out infinite;
+  }
+  @keyframes nextPulse{
+    0%,100%{box-shadow:0 6px 18px rgba(0,87,184,.22), 0 0 0 4px rgba(0,87,184,.08)}
+    50%{box-shadow:0 6px 22px rgba(0,87,184,.32), 0 0 0 8px rgba(0,87,184,.12)}
+  }
+  .card-next-badge{
+    position:absolute;top:-10px;left:10px;
+    background:linear-gradient(135deg,#0057B8,#1976D2);
+    color:#fff;font-size:.65rem;font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;
+    box-shadow:0 3px 8px rgba(0,87,184,.4);
+    animation:badgeBob 1.6s ease-in-out infinite;
+    z-index:3;
+  }
+  @keyframes badgeBob{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-3px)}
+  }
   .map-card.done{
     background:rgba(213,241,226,.93);
     border-color:#1FBF75;
@@ -996,8 +1020,8 @@
     </div>
 
     <div class="map-intro">
-      <h2>Your map</h2>
-      <p>Each card is a station — tap it to see the challenge. Visit them in any order you want. Cards turn green ✓ when you earn a stamp.</p>
+      <h2>Your unique route</h2>
+      <p>Every family gets a different order — your map is one of a kind. Look for the <strong>✈ Start here</strong> badge to see which station is up next.</p>
     </div>
 
     <div class="stations" id="stationList"><!-- populated by JS --></div>
@@ -1508,16 +1532,25 @@ function renderMap(){
     .map(id => STATIONS.find(s => s.id === id))
     .filter(Boolean);
 
+  // Find the family's "next stop" — first un-stamped station in their unique order
+  const nextStop = orderedStations.find(s => !state.stamps[s.id]);
+  const nextStopId = nextStop ? nextStop.id : null;
+
   const cards = orderedStations.map(s => {
     const parts = s.name.split("—").map(p => p.trim());
     const title = parts[0] || s.name;
     const theme = parts[1] || "";
     const done = state.stamps[s.id];
     const unlocked = state.unlocked[s.id];
-    const stateClass = done ? "done" : (unlocked ? "unlocked" : "");
+    const isNext = s.id === nextStopId;
+    const stateClass = done ? "done" : (unlocked ? "unlocked" : (isNext ? "next-up" : ""));
     const statusIcon = done ? "✓" : (unlocked ? "🔓" : "");
+    const nextBadge = isNext && !done && !unlocked
+      ? `<div class="card-next-badge">✈ Start here</div>`
+      : "";
     return `
       <article class="map-card ${stateClass}" data-id="${s.id}">
+        ${nextBadge}
         <div class="card-name">${title}</div>
         ${theme ? `<div class="card-theme">${theme}</div>` : ""}
         <div class="card-loc">
