@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MTM End of Year — Station Signs (17×11)</title>
+<style>
+  @page { size: 17in 11in; margin: 0; }
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #0A1F44;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sign {
+    width: 17in; height: 11in;
+    background:
+      radial-gradient(900px 500px at 10% 8%, rgba(245,197,24,.12) 0%, transparent 60%),
+      radial-gradient(800px 600px at 95% 100%, rgba(0,87,184,.08) 0%, transparent 60%),
+      linear-gradient(180deg, #FAF3E3 0%, #FFF8EC 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+  }
+  .sign:last-child { page-break-after: auto; break-after: auto; }
+
+  /* Decorative ticket notches on the sides */
+  .sign::before, .sign::after {
+    content: ""; position: absolute;
+    width: 28mm; height: 28mm; border-radius: 50%;
+    background: white; z-index: 4;
+  }
+  .sign::before { left: -14mm; top: 1.5in; }
+  .sign::after  { right: -14mm; top: 1.5in; }
+
+  /* Header */
+  .sign-header {
+    background: linear-gradient(135deg, #0057B8 0%, #1976D2 100%);
+    color: #fff;
+    padding: 0.5in 0.7in;
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative;
+  }
+  .sign-header::after {
+    content:""; position: absolute; left:0; right:0; bottom:-1px;
+    height: 0.18in;
+    background: repeating-linear-gradient(90deg, #F5C518 0 0.3in, transparent 0.3in 0.6in);
+  }
+  .sign-header .brand {
+    font-size: 26pt; font-weight: 900; letter-spacing: .12em;
+    line-height: 1;
+  }
+  .sign-header .subbrand {
+    font-size: 12pt; letter-spacing: .22em; opacity: .85; margin-top: 6px;
+    font-weight: 600;
+  }
+  .sign-header .plane {
+    font-size: 60pt; transform: rotate(-18deg); line-height: 1;
+    text-shadow: 0 3px 6px rgba(0,0,0,.2);
+  }
+
+  /* Body — 2 column landscape layout */
+  .sign-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 5.5in 1fr;
+    align-items: center;
+    padding: 0.4in 0.8in;
+    gap: 0.4in;
+  }
+
+  /* Left column: icon + name */
+  .sign-left {
+    text-align: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.15in;
+  }
+  .sign-icon {
+    font-size: 200pt; line-height: 1;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.15));
+  }
+  .sign-name {
+    font-size: 36pt; font-weight: 900;
+    color: #0A1F44; line-height: 1.05;
+    letter-spacing: -.01em;
+    margin-top: 0.1in;
+  }
+  .sign-subtitle {
+    font-size: 18pt;
+    color: #5b6b86; font-style: italic;
+    line-height: 1.2;
+  }
+
+  /* Right column: code + instruction + location */
+  .sign-right {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    gap: 0.3in;
+    text-align: center;
+  }
+  .sign-code-box {
+    padding: 0.5in 0.6in;
+    border: 7px double #C8102E;
+    border-radius: 0.4in;
+    background: rgba(255,255,255,.92);
+    box-shadow:
+      inset 0 0 0 3px rgba(200,16,46,.15),
+      0 8px 24px rgba(200,16,46,.12);
+    transform: rotate(-1.5deg);
+  }
+  .sign-code-box .label {
+    font-size: 16pt; letter-spacing: .45em;
+    font-weight: 900; color: #C8102E;
+    margin-bottom: 0.15in; text-transform: uppercase;
+  }
+  .sign-code-box .code {
+    font-size: 110pt; font-weight: 900;
+    color: #0A1F44; letter-spacing: .04em;
+    line-height: .92;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .sign-code-box .meaning {
+    margin-top: 0.18in;
+    font-size: 14pt; color: #5b6b86; font-style: italic;
+  }
+
+  .sign-instruction {
+    font-size: 14pt; color: #0A1F44;
+    font-weight: 700; letter-spacing: .03em;
+    background: rgba(245,197,24,.22);
+    border: 2px dashed #C9961A;
+    padding: 0.18in 0.4in; border-radius: 0.3in;
+  }
+  .sign-instruction strong { color: #0057B8; }
+
+  .sign-location {
+    padding: 0.22in 0.5in;
+    background: linear-gradient(135deg, rgba(0,87,184,.08), rgba(0,87,184,.16));
+    border: 2.5px solid rgba(0,87,184,.25);
+    border-radius: 0.3in;
+    font-size: 22pt; font-weight: 800;
+    color: #0057B8; letter-spacing: .06em;
+    align-self: center;
+  }
+
+  /* Footer */
+  .sign-footer {
+    background: #FFF3D9;
+    padding: 0.3in 0.8in;
+    display: flex; justify-content: space-between; align-items: center; gap: 0.6in;
+    border-top: 4px dashed rgba(10,31,68,.22);
+  }
+  .sign-footer .meta {
+    font-size: 12pt; letter-spacing: .2em;
+    color: #5b6b86; font-weight: 800;
+    text-transform: uppercase; line-height: 1.4;
+  }
+  .sign-footer .meta strong { color: #0A1F44; font-size: 14pt; }
+  .sign-footer .barcode {
+    flex: 1; height: 0.5in; max-width: 7in;
+    background: repeating-linear-gradient(
+      90deg,
+      #0A1F44 0 .04in, transparent .04in .08in,
+      #0A1F44 .08in .14in, transparent .14in .18in,
+      #0A1F44 .18in .24in, transparent .24in .3in
+    );
+    opacity: .9;
+  }
+</style>
+</head>
+<body>
+
+<!-- 01 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🍎</div>
+      <div class="sign-name">Rosh Hashana</div>
+      <div class="sign-subtitle">The Wishing Tree</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">TIKVA</div>
+        <div class="meaning">"Tikva" — hope, the wish that begins each new year</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 YOGA ROOM</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>01 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 02 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">😴</div>
+      <div class="sign-name">Katan Sleepover</div>
+      <div class="sign-subtitle">The Sleepover Selfie</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">CHANICHIM</div>
+        <div class="meaning">"Chanichim" — the campers, the youth of Maccabi</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 DANCE ROOM 1</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>02 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 03 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🛖</div>
+      <div class="sign-name">Sukkot</div>
+      <div class="sign-subtitle">Family Sukkah Build</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">SUKKAH</div>
+        <div class="meaning">"Sukkah" — the temporary shelter built for Sukkot</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 DANCE ROOM 2</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>03 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 04 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">💃</div>
+      <div class="sign-name">Simchat Torah</div>
+      <div class="sign-subtitle">Family Hora</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">SIMCHA</div>
+        <div class="meaning">"Simcha" — joy, the spirit of celebration</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 KATZ</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>04 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 05 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">💪</div>
+      <div class="sign-name">What is Maccabi Tzair?</div>
+      <div class="sign-subtitle">Roots & Values</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">MACCABI</div>
+        <div class="meaning">Our movement — named after the Maccabees, ancient Jewish heroes</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 MIFGASH</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>05 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 06 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🛡</div>
+      <div class="sign-name">Building Our Kvutza</div>
+      <div class="sign-subtitle">Family Shield</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">TILBOSHET</div>
+        <div class="meaning">"Tilboshet" — uniform, the visible identity of a kvutza</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 SENIOR LOUNGE</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>06 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 07 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🥨</div>
+      <div class="sign-name">Israeli Culture</div>
+      <div class="sign-subtitle">A Taste of Israel</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">ANIVA</div>
+        <div class="meaning">"Aniva" — the iconic Maccabi bandana / neckerchief</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 AEROBICS</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>07 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>ZIONISM</strong></div>
+  </div>
+</div>
+
+<!-- 08 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">📣</div>
+      <div class="sign-name">The Kvutza</div>
+      <div class="sign-subtitle">The Family Cheer</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">CHEVRA</div>
+        <div class="meaning">"Chevra" — group of friends, the heart of a kvutza</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 KIBLISKY</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>08 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 09 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🏆</div>
+      <div class="sign-name">Mini Maccabi Games</div>
+      <div class="sign-subtitle">Family Relay</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">RUACH</div>
+        <div class="meaning">"Ruach" — spirit, the energy that fills the games</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 BASKETBALL OUTSIDE</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>09 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 10 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🕯</div>
+      <div class="sign-name">Shabbat</div>
+      <div class="sign-subtitle">The Shabbat Puzzle</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">MENUCHA</div>
+        <div class="meaning">"Menucha" — rest, the gift of Shabbat</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 ASP 1</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>10 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🌙</div>
+      <div class="sign-name">Havdala</div>
+      <div class="sign-subtitle">What Do You Know?</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">HAVDALA</div>
+        <div class="meaning">"Havdala" — separation, marking the end of Shabbat</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 ASP 2</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>11 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 12 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🧳</div>
+      <div class="sign-name">Welcome Back</div>
+      <div class="sign-subtitle">Pack Your Story</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">SHALOM</div>
+        <div class="meaning">"Shalom" — hello, peace, welcome (from "Baruch Haba")</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 ASP 3</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>12 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 13 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🪖</div>
+      <div class="sign-name">Tzahal</div>
+      <div class="sign-subtitle">Trust Obstacle</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">ACHIM</div>
+        <div class="meaning">"Achim" — brothers, the bond of those who serve together</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 ASP 4</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>13 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>ZIONISM</strong></div>
+  </div>
+</div>
+
+<!-- 14 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">📸</div>
+      <div class="sign-name">Chanichim Day</div>
+      <div class="sign-subtitle">Pose & Snap</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">PEULA</div>
+        <div class="meaning">"Peula" — activity, the heart of every Maccabi gathering</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 WEBBER</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>14 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 15 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">💝</div>
+      <div class="sign-name">Mitzvah Day</div>
+      <div class="sign-subtitle">The Family Pledge</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">TIKKUN</div>
+        <div class="meaning">"Tikkun" — repair, from "tikkun olam" — repairing the world</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 SOCCER FIELD</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>15 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 16 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🎬</div>
+      <div class="sign-name">My Journey in Maccabi</div>
+      <div class="sign-subtitle">Memory in Motion</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">MASA</div>
+        <div class="meaning">"Masa" — journey, the path every chanich walks</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 BLUE PLAYGROUND</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>16 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 17 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">💡</div>
+      <div class="sign-name">Israeli Innovation</div>
+      <div class="sign-subtitle">Made in Israel</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">CHIDUSH</div>
+        <div class="meaning">"Chidush" — innovation, a brand new idea</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 BASKETBALL INSIDE</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>17 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>ZIONISM</strong></div>
+  </div>
+</div>
+
+<!-- 18 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🔥</div>
+      <div class="sign-name">Machane</div>
+      <div class="sign-subtitle">Build the Bonfire</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">MEDURA</div>
+        <div class="meaning">"Medura" — bonfire, the heart of every machane</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 LOBBY</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>18 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>COMMUNITY</strong></div>
+  </div>
+</div>
+
+<!-- 19 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🍷</div>
+      <div class="sign-name">Pesach</div>
+      <div class="sign-subtitle">Find the Afikoman</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">CHERUT</div>
+        <div class="meaning">"Cherut" — freedom, the soul of Pesach</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 PLAZA</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>19 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>JUDAISM</strong></div>
+  </div>
+</div>
+
+<!-- 20 -->
+<div class="sign">
+  <div class="sign-header">
+    <div>
+      <div class="brand">MACCABI TZAIR · MIAMI</div>
+      <div class="subbrand">END OF YEAR JOURNEY · 5786</div>
+    </div>
+    <div class="plane">✈</div>
+  </div>
+  <div class="sign-body">
+    <div class="sign-left">
+      <div class="sign-icon">🇮🇱</div>
+      <div class="sign-name">Yom Haatzmaut</div>
+      <div class="sign-subtitle">Israel's Birthday</div>
+    </div>
+    <div class="sign-right">
+      <div class="sign-code-box">
+        <div class="label">YOUR CODE</div>
+        <div class="code">ISRAEL</div>
+        <div class="meaning">"Israel" — the heart of our movement</div>
+      </div>
+      <div class="sign-instruction">Type this code in the <strong>Maccabi family app</strong> to unlock the challenge ✈</div>
+      <div class="sign-location">📍 PLAZA</div>
+    </div>
+  </div>
+  <div class="sign-footer">
+    <div class="meta">STATION<br><strong>20 / 20</strong></div>
+    <div class="barcode"></div>
+    <div class="meta" style="text-align:right">EJE<br><strong>ZIONISM</strong></div>
+  </div>
+</div>
+
+</body>
+</html>
