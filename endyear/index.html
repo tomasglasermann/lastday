@@ -304,6 +304,17 @@
     0%,100%{transform:translateY(0)}
     50%{transform:translateY(-3px)}
   }
+  .card-crowd{
+    margin-top:6px;display:inline-flex;align-items:center;gap:4px;
+    font-size:.68rem;font-weight:700;letter-spacing:.04em;
+    color:#B0481A;background:rgba(255,140,66,.14);
+    padding:3px 8px;border-radius:999px;align-self:flex-start;
+    line-height:1.2;
+  }
+  .card-crowd.busy{
+    color:#C8102E;background:rgba(200,16,46,.13);
+  }
+  .card-crowd.busy::before{content:"";display:inline-block}
   .map-card.done{
     background:rgba(213,241,226,.93);
     border-color:#1FBF75;
@@ -1021,7 +1032,7 @@
 
     <div class="map-intro">
       <h2>Your unique route</h2>
-      <p>Every family gets a different order — your map is one of a kind. Look for the <strong>✈ Start here</strong> badge to see which station is up next.</p>
+      <p>Every family gets a different order, and the <strong>✈ Start here</strong> badge moves to whichever next station is least busy right now — so families spread out across the JCC.</p>
     </div>
 
     <div class="stations" id="stationList"><!-- populated by JS --></div>
@@ -1447,7 +1458,10 @@ function go(name){
   const tabbar = document.getElementById("tabbar");
   if(state.family){ tabbar.classList.add("show"); }
   if(name==="passport") renderPassport();
-  if(name==="map") renderMap();
+  if(name==="map"){
+    renderMap();
+    pushFamilyProgress(); // refreshes congestion + keeps family alive on the leaderboard
+  }
   if(name==="podium") startPodiumPolling();
   else stopPodiumPolling();
   window.scrollTo({top:0,behavior:"instant"});
@@ -1532,8 +1546,24 @@ function renderMap(){
     .map(id => STATIONS.find(s => s.id === id))
     .filter(Boolean);
 
-  // Find the family's "next stop" — first un-stamped station in their unique order
-  const nextStop = orderedStations.find(s => !state.stamps[s.id]);
+  // Smart "next stop" pick: among the next 4 stations in the family's unique
+  // order, pick the one with the LEAST other families currently there.
+  // This spreads families across the JCC instead of bunching them up.
+  const nextStop = (function pickSmartNext(){
+    const upcoming = orderedStations.filter(s => !state.stamps[s.id]);
+    if(upcoming.length === 0) return null;
+    const window = upcoming.slice(0, 4);
+    let best = window[0];
+    let bestCrowd = lastCongestion[best.id] || 0;
+    for(let i = 1; i < window.length; i++){
+      const crowd = lastCongestion[window[i].id] || 0;
+      if(crowd < bestCrowd){
+        best = window[i];
+        bestCrowd = crowd;
+      }
+    }
+    return best;
+  })();
   const nextStopId = nextStop ? nextStop.id : null;
 
   const cards = orderedStations.map(s => {
@@ -1543,10 +1573,14 @@ function renderMap(){
     const done = state.stamps[s.id];
     const unlocked = state.unlocked[s.id];
     const isNext = s.id === nextStopId;
+    const crowd = lastCongestion[s.id] || 0;
     const stateClass = done ? "done" : (unlocked ? "unlocked" : (isNext ? "next-up" : ""));
     const statusIcon = done ? "✓" : (unlocked ? "🔓" : "");
     const nextBadge = isNext && !done && !unlocked
       ? `<div class="card-next-badge">✈ Start here</div>`
+      : "";
+    const crowdBadge = (!done && crowd > 0)
+      ? `<div class="card-crowd ${crowd >= 3 ? 'busy' : ''}">🟠 ${crowd} ${crowd === 1 ? "family" : "families"} here</div>`
       : "";
     return `
       <article class="map-card ${stateClass}" data-id="${s.id}">
@@ -1557,6 +1591,7 @@ function renderMap(){
           <span class="card-loc-pin">📍</span>
           <span>${s.location}</span>
         </div>
+        ${crowdBadge}
         ${statusIcon ? `<div class="card-status">${statusIcon}</div>` : ""}
       </article>
     `;
@@ -1599,6 +1634,13 @@ function renderPassport(){
    ============================================================ */
 let podiumPollInterval = null;
 let podiumLastFetchOk = true;
+let lastCongestion = {};   // station_id -> count of OTHER families currently there
+
+function unlockedNotStampedIds(){
+  return Object.keys(state.unlocked || {})
+    .filter(id => state.unlocked[id] && !state.stamps[id])
+    .map(Number);
+}
 
 function escapeHtml(s){
   return String(s)
@@ -1618,17 +1660,29 @@ async function pushFamilyProgress(){
     save();
   }
   try{
-    await fetch("/api/podium", {
+    const r = await fetch("/api/podium", {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({
         id: state.seq,
         name: state.family,
         stamps: stampsCount,
+        unlockedNotStamped: unlockedNotStampedIds(),
         startedAt: state.startedAt || Date.now(),
         completedAt: allDone ? state.completedAt : null
       })
     });
+    if(r && r.ok){
+      const data = await r.json();
+      if(data && data.congestion){
+        lastCongestion = data.congestion;
+        // If user is on the map, refresh so the smart "Start here" updates
+        const mapScreen = document.getElementById("screen-map");
+        if(mapScreen && mapScreen.classList.contains("active")){
+          renderMap();
+        }
+      }
+    }
   } catch(e){
     /* silent — don't break the family experience */
   }
@@ -1636,9 +1690,11 @@ async function pushFamilyProgress(){
 
 async function fetchPodium(){
   try{
-    const r = await fetch("/api/podium", { cache:"no-store" });
+    const url = state.seq ? `/api/podium?id=${encodeURIComponent(state.seq)}` : "/api/podium";
+    const r = await fetch(url, { cache:"no-store" });
     if(!r.ok) throw new Error("status " + r.status);
     const data = await r.json();
+    if(data && data.congestion) lastCongestion = data.congestion;
     podiumLastFetchOk = true;
     renderPodium(data);
   } catch(e){
@@ -1811,6 +1867,7 @@ function openStation(id){
       if(val === s.code){
         state.unlocked[id] = true;
         save();
+        pushFamilyProgress();
         openStation(id);
       } else {
         err.classList.add("show");
